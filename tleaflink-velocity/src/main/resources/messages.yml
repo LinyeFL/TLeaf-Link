@@ -1,0 +1,56 @@
+# Velocity 子服务器显示名称。
+# 未列出的服务器直接使用 Velocity 注册的原始服务器名。
+Servers:
+  lobby: "登录服"
+  survival: "生存服"
+  redstone: "红石服"
+
+# MC 消息转发至 QQ／KOOK 时使用的格式。
+# 可用变量：{server}、{player}、{message}
+Chat:
+  format: "[{server}] {player}：{message}"
+
+# QQ→MC 消息显示。
+QQ:
+  # QQ 群号到简称的映射，未配置时使用真实群名。
+  # groups:
+  #   123456789: "白叶群"
+
+  # 可用变量：{group}、{player}、{message}
+  # 支持 & 颜色码：&6=金色 &a=绿色 &f=白色 &r=重置 等
+  format: "&6[{group}]&r &a{player}&r&f：&r{message}"
+
+  # 屏蔽 QQ 官方 BOT 消息（true=屏蔽，false=转发）
+  filter-official-bot: true
+
+  # 需要屏蔽的 BOT QQ 号列表（filter-official-bot 为 true 时生效）
+  # 官方 BOT 的 QQ 号可以在这里手动添加
+  filter-bot-ids:
+    - 123456789
+
+  # 群级别开关（默认全开，未列出的群默认全开）
+  # 可通过群内指令 /转发 开|关 和 /通知 开|关 修改，自动持久化
+  group-switches:
+    # 示例：
+    # 123456789:
+    #   forward: true
+    #   notify: true
+
+Notifications:
+  # 控制首次进入代理网络及彻底离开代理网络的通知。
+  join-quit-enabled: true
+
+  # 单独控制代理网络内跨子服通知。
+  server-switch-enabled: true
+
+  # 控制 PlumBot 启动和关闭状态通知。
+  plugin-status-enabled: false
+
+  # 可用变量：{player}、{server}
+  join: "玩家 {player} 进入服务器"
+
+  # 可用变量：{player}
+  quit: "玩家 {player} 离开服务器"
+
+  # 可用变量：{player}、{from_server}、{to_server}
+  switch: "玩家 {player} 从 {from_server} 前往 {to_server}"

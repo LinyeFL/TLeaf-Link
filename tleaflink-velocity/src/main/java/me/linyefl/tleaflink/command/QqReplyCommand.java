@@ -1,0 +1,71 @@
+package me.linyefl.tleaflink.command;
+
+import com.velocitypowered.api.command.SimpleCommand;
+import com.velocitypowered.api.proxy.Player;
+import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.bot.QQBot;
+import me.linyefl.tleaflink.event.qq.QQEvent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+
+public class QqReplyCommand implements SimpleCommand {
+
+    @Override
+    public void execute(Invocation invocation) {
+        if (!(invocation.source() instanceof Player)) {
+            invocation.source().sendMessage(
+                Component.text("此命令只能由玩家执行", NamedTextColor.RED)
+            );
+            return;
+        }
+
+        Player player = (Player) invocation.source();
+        String[] args = invocation.arguments();
+
+        if (args.length < 2) {
+            player.sendMessage(
+                Component.text("用法：/qqreply <对方昵称> <消息>", NamedTextColor.RED)
+            );
+            return;
+        }
+
+        String messageId = args[0];
+        StringBuilder msgBuilder = new StringBuilder();
+        for (int i = 1; i < args.length; i++) {
+            if (i > 1) msgBuilder.append(" ");
+            msgBuilder.append(args[i]);
+        }
+        String message = msgBuilder.toString();
+
+        QQEvent.ReplyInfo replyInfo = QQEvent.getReplyInfoByMessageId(messageId);
+        if (replyInfo == null) {
+            player.sendMessage(
+                Component.text("找不到该QQ用户，可能消息已过期（5分钟有效）", NamedTextColor.RED)
+            );
+            return;
+        }
+
+        QQBot qqBot = (QQBot) PlumBot.getBot();
+        if (qqBot == null) {
+            player.sendMessage(
+                Component.text("QQ Bot 未启动", NamedTextColor.RED)
+            );
+            return;
+        }
+
+        String qqMessage = "[CQ:at,qq=" + replyInfo.getQqUserId() + "]\n[MC回复] "
+                + player.getUsername() + "：" + message;
+
+        qqBot.sendCQMsg(true, qqMessage, replyInfo.getGroupId());
+
+        LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacyAmpersand();
+        Component mcBroadcast = legacySerializer.deserialize(
+                "&6[QQ回复] &f" + player.getUsername() + " &7→ &f" + replyInfo.getQqNickname() + "&7: " + message);
+        PlumBot.INSTANCE.getServer().getAllPlayers().forEach(p -> p.sendMessage(mcBroadcast));
+        
+        player.sendMessage(
+            Component.text("已回复 " + replyInfo.getQqNickname() + "：" + message, NamedTextColor.GREEN)
+        );
+    }
+}

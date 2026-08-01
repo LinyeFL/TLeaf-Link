@@ -1,0 +1,23 @@
+#Bot配置
+Ver: '1.3.0'
+ 
+Bot:
+  Mode: "kook"
+  #机器人模式，可选go-cqhttp、kook
+  go-cqhttp:
+    Http: "http://127.0.0.1:5700"
+    Token: ""
+    IsAccessToken: false
+    ListenPort: 5701
+  Kook:
+    Token: ""
+    Debug: false
+ 
+Groups:
+  - 111
+  
+KookGroups:
+  - "你的KOOK频道ID"
+ 
+Admins:
+  - 111
