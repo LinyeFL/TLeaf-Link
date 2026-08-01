@@ -21,29 +21,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up JDK 21
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'zulu'
         cache: maven
+    - name: Clone and build KookBC
+      run: |
+        git clone --depth 1 https://github.com/SNWCreations/KookBC.git
+        cd KookBC
+        chmod +x gradlew
+        ./gradlew shadowJar --no-daemon
+    - name: Install KookBC to local Maven repo
+      run: |
+        ls KookBC/build/libs/
+        JAR=$(ls KookBC/build/libs/*.jar | head -1)
+        mvn install:install-file -Dfile="$JAR" -DgroupId=io.github.snwcreations -DartifactId=KookBC -Dversion=0.33.0 -Dpackaging=jar
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-    - name: Upload a Build Artifact - PlumBot-bukkit
-      uses: actions/upload-artifact@v3.1.2
+    - name: Upload a Build Artifact - TLeaf-Link-bukkit
+      uses: actions/upload-artifact@v4
       with:
-        name: "PlumBot-bukkit.jar"
-        path: tleaflink-bukkit/target/tleaflink-bukkit\*.jar
+        name: "TLeaf-Link-bukkit.jar"
+        path: 'tleaflink-bukkit/target/tleaflink-bukkit-*.jar'
 
-    - name: Upload a Build Artifact - PlumBot-velocity
-      uses: actions/upload-artifact@v3.1.2
+    - name: Upload a Build Artifact - TLeaf-Link-velocity
+      uses: actions/upload-artifact@v4
       with:
-        name: "PlumBot-velocity.jar"
-        path: tleaflink-velocity/target/tleaflink-velocity\*.jar
-
-    - name: Upload a Build Artifact - PlumBot-bungee
-      uses: actions/upload-artifact@v3.1.2
-      with:
-        name: "PlumBot-bungee.jar"
+        name: "TLeaf-Link-velocity.jar"
+        path: 'tleaflink-velocity/target/tleaflink-velocity-*.jar'
