@@ -10,7 +10,7 @@ name: Java CI with Maven
  
 on:
   push:
-    branches: [ "main", "build-1.3.2" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
@@ -42,19 +42,14 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
  
-    - name: Upload a Build Artifact - PlumBot-bukkit
+    - name: Upload a Build Artifact - TLeaf-Link-bukkit
       uses: actions/upload-artifact@v4
       with:
-        name: "PlumBot-bukkit.jar"
+        name: "TLeaf-Link-bukkit.jar"
         path: 'tleaflink-bukkit/target/tleaflink-bukkit-*.jar'
  
-    - name: Upload a Build Artifact - PlumBot-velocity
+    - name: Upload a Build Artifact - TLeaf-Link-velocity
       uses: actions/upload-artifact@v4
       with:
-        name: "PlumBot-velocity.jar"
+        name: "TLeaf-Link-velocity.jar"
         path: 'tleaflink-velocity/target/tleaflink-velocity-*.jar'
- 
-    - name: Upload a Build Artifact - PlumBot-bungee
-      uses: actions/upload-artifact@v4
-      with:
-        name: "Plumbot-bungee.jar"
