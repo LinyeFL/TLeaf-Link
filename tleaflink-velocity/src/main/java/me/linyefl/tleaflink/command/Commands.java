@@ -32,13 +32,13 @@ public class Commands implements SimpleCommand {
         String[] args = invocation.arguments();
 
         if (args.length == 0) {
-            source.sendMessage(Component.text("请使用/pb help查看帮助"));
+            source.sendMessage(Component.text("请使用/tleaflink help查看帮助"));
             return;
         }
         switch (args[0].toLowerCase()) {
             case "info":
                 StringBuilder stringbuilder = new StringBuilder();
-                stringbuilder.append("§1---PlumBot 信息---").append("\n");
+                stringbuilder.append("§1---TLeaf-Link 信息---").append("\n");
                 stringbuilder.append("§a作者: ").append("§f").append(plugin.getEnvironment().author).append("\n");
                 stringbuilder.append("§a版本: ").append("§f").append(plugin.getEnvironment().version).append("\n");
                 stringbuilder.append("§a机器人平台: ").append("§f").append(Config.bot.Bot.Mode).append("\n");
@@ -47,7 +47,7 @@ public class Commands implements SimpleCommand {
                 source.sendMessage(Component.text(stringbuilder.toString()));
                 break;
             case "reload": {
-                if (source.hasPermission("plumbot.command")) {
+                if (source.hasPermission("tleaflink.command")) {
                     try {
                         DatabaseManager.close();
                         if (PlumBot.getQQBot() != null) PlumBot.getQQBot().shutdown();
@@ -66,15 +66,15 @@ public class Commands implements SimpleCommand {
                 break;
             }
             case "help": {
-                source.sendMessage(Component.text("§6PlumBot 机器人帮助菜单"));
-                source.sendMessage(Component.text("§6/pb reload :§f重载插件"));
-                source.sendMessage(Component.text("§6/pb info :§f插件基本信息"));
-                source.sendMessage(Component.text("§6/pb help :§f获取插件帮助"));
+                source.sendMessage(Component.text("§6TLeaf-Link 机器人帮助菜单"));
+                source.sendMessage(Component.text("§6/tleaflink reload :§f重载插件"));
+                source.sendMessage(Component.text("§6/tleaflink info :§f插件基本信息"));
+                source.sendMessage(Component.text("§6/tleaflink help :§f获取插件帮助"));
                 break;
             }
             case "kook":
                 if (args.length == 1) {
-                    source.sendMessage(Component.text("命令错误，格式：/plumbot kook <value>"));
+                    source.sendMessage(Component.text("命令错误，格式：/tleaflink kook <value>"));
                     source.sendMessage(Component.text("value可选值：plugins，help"));
                     break;
                 }
@@ -96,7 +96,7 @@ public class Commands implements SimpleCommand {
                 }
                 break;
             default: {
-                source.sendMessage(Component.text("错误的指令用法，请使用/pb help查看命令使用方法"));
+                source.sendMessage(Component.text("错误的指令用法，请使用/tleaflink help查看命令使用方法"));
             }
         }
     }
