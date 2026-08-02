@@ -27,7 +27,7 @@ package me.linyefl.tleaflink.internal.maven;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.config.Args;
 
 import java.io.File;
@@ -44,7 +44,7 @@ import java.util.Objects;
  */
 public final class LibraryLoader {
 
-    private static PlumBot plugin = PlumBot.INSTANCE;
+    private static TLeafLink plugin = TLeafLink.INSTANCE;
 
     @SuppressWarnings("Guava")
     private static final Supplier<URLClassLoaderAccess> URL_INJECTOR = Suppliers.memoize(() -> URLClassLoaderAccess.create((URLClassLoader) plugin.getClass().getClassLoader()));

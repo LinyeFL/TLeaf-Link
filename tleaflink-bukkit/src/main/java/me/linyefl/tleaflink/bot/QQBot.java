@@ -1,6 +1,6 @@
 package me.linyefl.tleaflink.bot;
 
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.config.Config;
 import me.linyefl.tleaflink.event.qq.QQEvent;
 import sdk.client.ClientFactory;
@@ -19,7 +19,7 @@ import sdk.listener.SimpleListener;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static me.linyefl.tleaflink.PlumBot.getScheduler;
+import static me.linyefl.tleaflink.TLeafLink.getScheduler;
 
 public class QQBot implements Bot {
 
@@ -32,7 +32,7 @@ public class QQBot implements Bot {
     @Override
     public void start() {
         qqEvent = new QQEvent();
-        PlumBot.INSTANCE.getLogger().info("QQ事件监听器注册完毕");
+        TLeafLink.INSTANCE.getLogger().info("QQ事件监听器注册完毕");
         getScheduler().runTaskAsynchronously(() -> {
             http_config = new CQConfig(Config.getCqBotHttp(), Config.getCqBotToken(), Config.getCqBotIsAccessToken());
             client =  new ClientFactory(http_config).createGroupClient();
@@ -76,17 +76,17 @@ public class QQBot implements Bot {
             dispatchers.start(10);//线程组处理任务
             List<Long> groups = Config.getGroupQQs();
             for (long groupID : groups) {
-                PlumBot.getBot().sendMsg(true, "PlumBot已启动", groupID);
+                TLeafLink.getBot().sendMsg(true, "TLeafLink已启动", groupID);
             }
         });
     }
 
     @Override
     public void shutdown() {
-        QQBot bot = (QQBot) PlumBot.getBot();
+        QQBot bot = (QQBot) TLeafLink.getBot();
         List<Long> groups = Config.getGroupQQs();
         for (long groupID : groups) {
-            bot.sendGroupMsg( "PlumBot已关闭", groupID);
+            bot.sendGroupMsg( "TLeafLink已关闭", groupID);
         }
         connection.stop();
     }
@@ -95,7 +95,7 @@ public class QQBot implements Bot {
     public void sendMsg(boolean isGroup, String msg, long id) {
         if (id == 0L) {return;}
         if ("".equals(msg)) {return;}
-        PlumBot.getScheduler().runTaskAsynchronously(() -> {
+        TLeafLink.getScheduler().runTaskAsynchronously(() -> {
             if (isGroup) {
                 this.sendGroupMsg(msg, id);
             } else {
@@ -107,7 +107,7 @@ public class QQBot implements Bot {
     public void sendCQMsg(boolean isGroup, String msg, long id) {
         if (id == 0L) {return;}
         if ("".equals(msg)) {return;}
-        PlumBot.getScheduler().runTaskAsynchronously(() -> {
+        TLeafLink.getScheduler().runTaskAsynchronously(() -> {
             if (isGroup) {
                 this.sendGroupCQMsg(msg, id);
             } else {

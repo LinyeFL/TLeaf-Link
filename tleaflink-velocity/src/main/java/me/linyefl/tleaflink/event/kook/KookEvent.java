@@ -1,7 +1,7 @@
 package me.linyefl.tleaflink.event.kook;
 
 import com.velocitypowered.api.proxy.Player;
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.bot.KookBot;
 import me.linyefl.tleaflink.internal.Config;
 import me.linyefl.tleaflink.internal.DbConfig;
@@ -24,11 +24,11 @@ public class KookEvent implements Listener {
 
     public static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder().build();
 
-    private final PlumBot plugin;
+    private final TLeafLink plugin;
     private final KookBot kBot;
     private final String Prefix = Config.config.Forwarding.prefix;
 
-    public KookEvent(KookBot kookBot, PlumBot plugin) {
+    public KookEvent(KookBot kookBot, TLeafLink plugin) {
         this.kBot = kookBot;
         this.plugin = plugin;
     }
@@ -101,12 +101,12 @@ public class KookEvent implements Listener {
                     return;
                 }
                 plugin.getServer().getScheduler().buildTask(plugin, () -> {
-                    long nameForId = DatabaseManager.getBindId(name, DbConfig.type.toLowerCase(), PlumBot.getDatabase());
+                    long nameForId = DatabaseManager.getBindId(name, DbConfig.type.toLowerCase(), TLeafLink.getDatabase());
                     if (nameForId == 0L) {
                         kBot.sendChannelReply(e, "尚未申请白名单");
                         return;
                     }
-                    DatabaseManager.removeBindid(name, DbConfig.type.toLowerCase(), PlumBot.getDatabase());
+                    DatabaseManager.removeBindid(name, DbConfig.type.toLowerCase(), TLeafLink.getDatabase());
                     kBot.sendChannelReply(e, "成功移出白名单");
                 }).schedule();
                 return;
@@ -124,13 +124,13 @@ public class KookEvent implements Listener {
                     kBot.sendChannelReply(e, "KOOK ID不能为空");
                     return;
                 }
-                PlumBot.INSTANCE.getServer().getScheduler().buildTask(PlumBot.INSTANCE, () -> {
-                    String idForName = DatabaseManager.getBind(kookId, DbConfig.type.toLowerCase(), PlumBot.getDatabase());
+                TLeafLink.INSTANCE.getServer().getScheduler().buildTask(TLeafLink.INSTANCE, () -> {
+                    String idForName = DatabaseManager.getBind(kookId, DbConfig.type.toLowerCase(), TLeafLink.getDatabase());
                     if (idForName == null) {
                         kBot.sendChannelReply(e, "尚未申请白名单");
                         return;
                     }
-                    DatabaseManager.removeBind(kookId, DbConfig.type.toLowerCase(), PlumBot.getDatabase());
+                    DatabaseManager.removeBind(kookId, DbConfig.type.toLowerCase(), TLeafLink.getDatabase());
                     kBot.sendChannelReply(e, "成功移出白名单");
                 }).schedule();
                 return;
@@ -186,12 +186,12 @@ public class KookEvent implements Listener {
                 return;
             }
             plugin.getServer().getScheduler().buildTask(plugin, () -> {
-                if ((DatabaseManager.getBind(senderID, DbConfig.type.toLowerCase(), PlumBot.getDatabase()) != null)
-                        || (DatabaseManager.getBindId(PlayerName, DbConfig.type.toLowerCase(), PlumBot.getDatabase()) != 0L)) {
+                if ((DatabaseManager.getBind(senderID, DbConfig.type.toLowerCase(), TLeafLink.getDatabase()) != null)
+                        || (DatabaseManager.getBindId(PlayerName, DbConfig.type.toLowerCase(), TLeafLink.getDatabase()) != 0L)) {
                     kBot.sendChannelReply(e, "绑定失败");
                     return;
                 }
-                DatabaseManager.addBind(PlayerName, senderID, DbConfig.type.toLowerCase(), PlumBot.getDatabase());
+                DatabaseManager.addBind(PlayerName, senderID, DbConfig.type.toLowerCase(), TLeafLink.getDatabase());
                 kBot.sendChannelReply(e, "成功申请白名单");
             }).schedule();
             return;
@@ -205,13 +205,13 @@ public class KookEvent implements Listener {
                 kBot.sendChannelReply(e, "白名单功能未开启");
                 return;
             }
-            PlumBot.INSTANCE.getServer().getScheduler().buildTask(PlumBot.INSTANCE, () -> {
-                String idForName = DatabaseManager.getBind(String.valueOf(senderID), DbConfig.type.toLowerCase(), PlumBot.getDatabase());
+            TLeafLink.INSTANCE.getServer().getScheduler().buildTask(TLeafLink.INSTANCE, () -> {
+                String idForName = DatabaseManager.getBind(String.valueOf(senderID), DbConfig.type.toLowerCase(), TLeafLink.getDatabase());
                 if (idForName == null || idForName.isEmpty()) {
                     kBot.sendChannelReply(e, "您尚未申请白名单");
                     return;
                 }
-                DatabaseManager.removeBind(String.valueOf(senderID), DbConfig.type.toLowerCase(), PlumBot.getDatabase());
+                DatabaseManager.removeBind(String.valueOf(senderID), DbConfig.type.toLowerCase(), TLeafLink.getDatabase());
                 kBot.sendChannelReply(e, "成功移出白名单");
             }).schedule();
             return;
@@ -289,10 +289,10 @@ public class KookEvent implements Listener {
     @EventHandler
     public void onGroupDecreaseNotice(UserLeaveGuildEvent e) {
         String userId = e.getUser().getId();
-        String player = DatabaseManager.getBind(userId, DbConfig.type.toLowerCase(), PlumBot.getDatabase());
+        String player = DatabaseManager.getBind(userId, DbConfig.type.toLowerCase(), TLeafLink.getDatabase());
         if (player == null) {
             return;
         }
-        DatabaseManager.removeBindid(player, DbConfig.type.toLowerCase(), PlumBot.getDatabase());
+        DatabaseManager.removeBindid(player, DbConfig.type.toLowerCase(), TLeafLink.getDatabase());
     }
 }

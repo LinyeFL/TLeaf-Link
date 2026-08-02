@@ -5,7 +5,7 @@ import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.bot.Bot;
 import me.linyefl.tleaflink.internal.Config;
 import me.linyefl.tleaflink.internal.DbConfig;
@@ -62,11 +62,11 @@ public class ServerEvent {
         String name = StringTool.filterColor(event.getPlayer().getUsername());
 
         if (Config.config.WhiteList.enable) {
-            PlumBot.INSTANCE.getServer().getScheduler().buildTask(PlumBot.INSTANCE, () -> {
+            TLeafLink.INSTANCE.getServer().getScheduler().buildTask(TLeafLink.INSTANCE, () -> {
                 long qq;
-                qq = (DatabaseManager.getBindId(name, DbConfig.type.toLowerCase(), PlumBot.getDatabase()));
+                qq = (DatabaseManager.getBindId(name, DbConfig.type.toLowerCase(), TLeafLink.getDatabase()));
                 if (qq == 0L) {
-                    PlumBot.INSTANCE.getServer().getScheduler().buildTask(PlumBot.INSTANCE, () -> {
+                    TLeafLink.INSTANCE.getServer().getScheduler().buildTask(TLeafLink.INSTANCE, () -> {
                         event.getPlayer().disconnect(Component.text(Config.config.WhiteList.kickMsg));
                     }).delay(2L, TimeUnit.SECONDS).schedule();
                     event.setResult(ServerPreConnectEvent.ServerResult.denied());
@@ -74,14 +74,14 @@ public class ServerEvent {
                     return;
                 }
                 for (long groupID : Config.bot.Groups) {
-                    Bot qqBot = PlumBot.getQQBot();
+                    Bot qqBot = TLeafLink.getQQBot();
                     if (qqBot != null && !qqBot.checkUserInGroup(qq, groupID)) {
-                        PlumBot.INSTANCE.getServer().getScheduler().buildTask(PlumBot.INSTANCE, () -> {
+                        TLeafLink.INSTANCE.getServer().getScheduler().buildTask(TLeafLink.INSTANCE, () -> {
                             event.getPlayer().disconnect(Component.text(Config.config.WhiteList.kickMsg));
                         }).delay(2L, TimeUnit.SECONDS).schedule();
                         event.setResult(ServerPreConnectEvent.ServerResult.denied());
                         sendToAllPlatforms("玩家" + name + "因为未在白名单中被踢出");
-                        DatabaseManager.removeBind(String.valueOf(qq), DbConfig.type.toLowerCase(), PlumBot.getDatabase());
+                        DatabaseManager.removeBind(String.valueOf(qq), DbConfig.type.toLowerCase(), TLeafLink.getDatabase());
                         return;
                     }
                 }
@@ -175,7 +175,7 @@ public class ServerEvent {
 
     private void sendToAllPlatforms(String message) {
         // QQ
-        Bot qqBot = PlumBot.getQQBot();
+        Bot qqBot = TLeafLink.getQQBot();
         if (qqBot != null) {
             List<Long> qqGroups = Config.bot.Groups;
             for (long groupID : qqGroups) {
@@ -184,7 +184,7 @@ public class ServerEvent {
             }
         }
         // KOOK
-        Bot kookBot = PlumBot.getKookBot();
+        Bot kookBot = TLeafLink.getKookBot();
         if (kookBot != null) {
             List<String> kookGroups = Config.bot.KookGroups;
             if (kookGroups != null) {
@@ -198,7 +198,7 @@ public class ServerEvent {
 
     private void sendNotificationToAllPlatforms(String message) {
         // QQ（受群通知开关控制）
-        Bot qqBot = PlumBot.getQQBot();
+        Bot qqBot = TLeafLink.getQQBot();
         if (qqBot != null) {
             List<Long> qqGroups = Config.bot.Groups;
             for (long groupID : qqGroups) {
@@ -207,7 +207,7 @@ public class ServerEvent {
             }
         }
         // KOOK（直接发，暂无频道级通知开关）
-        Bot kookBot = PlumBot.getKookBot();
+        Bot kookBot = TLeafLink.getKookBot();
         if (kookBot != null) {
             List<String> kookGroups = Config.bot.KookGroups;
             if (kookGroups != null) {
@@ -222,7 +222,7 @@ public class ServerEvent {
     @SuppressWarnings("unchecked")
     private boolean isNotifyEnabled(long groupId) {
         try {
-            Map<String, Object> msgObj = PlumBot.INSTANCE.vconf.getMessagesObj();
+            Map<String, Object> msgObj = TLeafLink.INSTANCE.vconf.getMessagesObj();
             if (msgObj != null) {
                 Map<String, Object> qqMap = (Map<String, Object>) msgObj.get("QQ");
                 if (qqMap != null) {
@@ -249,7 +249,7 @@ public class ServerEvent {
     @SuppressWarnings("unchecked")
     private boolean isForwardEnabled(long groupId) {
         try {
-            Map<String, Object> msgObj = PlumBot.INSTANCE.vconf.getMessagesObj();
+            Map<String, Object> msgObj = TLeafLink.INSTANCE.vconf.getMessagesObj();
             if (msgObj != null) {
                 Map<String, Object> qqMap = (Map<String, Object>) msgObj.get("QQ");
                 if (qqMap != null) {

@@ -1,6 +1,6 @@
 package me.linyefl.tleaflink.command;
 
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.bot.KookBot;
 import me.linyefl.tleaflink.config.Config;
 import me.linyefl.tleaflink.config.DataBase;
@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 
 public class Commands implements CommandExecutor{
 
-    private PlumBot plugin;
+    private TLeafLink plugin;
 
-    public Commands(PlumBot plugin){
+    public Commands(TLeafLink plugin){
         this.plugin = plugin;
     }
 
@@ -51,10 +51,10 @@ public class Commands implements CommandExecutor{
             case "reload":
                 if (args.length != 1) return true;
                 DatabaseManager.close();
-                PlumBot.getBot().shutdown();
+                TLeafLink.getBot().shutdown();
                 Config.loadConfig();
                 DatabaseManager.start();
-                PlumBot.getBot().start();
+                TLeafLink.getBot().start();
                 sender.sendMessage("TLeaf-Link已重载");
                 break;
             case "help":

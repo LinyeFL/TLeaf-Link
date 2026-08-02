@@ -1,6 +1,6 @@
 package me.linyefl.tleaflink.bot;
 
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.config.Config;
 import me.linyefl.tleaflink.event.kook.KookEvent;
 import me.linyefl.tleaflink.internal.kook.KookClient;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static me.linyefl.tleaflink.PlumBot.INSTANCE;
+import static me.linyefl.tleaflink.TLeafLink.INSTANCE;
 
 public class KookBot implements Bot {
 
@@ -57,7 +57,7 @@ public class KookBot implements Bot {
         kook.getCore().getEventManager().registerHandlers(kook.getInternalPlugin(), new KookEvent(this));
         List<Long> groups = Config.getGroupQQs();
         for (long groupID : groups) {
-            PlumBot.getBot().sendMsg(true, "PlumBot已启动", groupID);
+            TLeafLink.getBot().sendMsg(true, "TLeafLink已启动", groupID);
         }
     }
 
@@ -65,7 +65,7 @@ public class KookBot implements Bot {
     public void shutdown() {
         List<Long> groups = Config.getGroupQQs();
         for (long groupID : groups) {
-            sendChannelMessage("PlumBot已关闭", getChannel(groupID));
+            sendChannelMessage("TLeafLink已关闭", getChannel(groupID));
         }
         kookClient.shutdown();
     }
@@ -74,7 +74,7 @@ public class KookBot implements Bot {
     public void sendMsg(boolean isGroup, String message, long id) {
         if (id == 0L) {return;}
         if ("".equals(message)) {return;}
-        PlumBot.getScheduler().runTaskAsynchronously(() -> {
+        TLeafLink.getScheduler().runTaskAsynchronously(() -> {
             if (isGroup) {
                 sendChannelMessage(message, getChannel(id));
             }
@@ -87,7 +87,7 @@ public class KookBot implements Bot {
     public void sendMsg(boolean isGroup, BaseComponent message, long id) {
         if (id == 0L) {return;}
         if (message.toString().isEmpty()) {return;}
-        PlumBot.getScheduler().runTaskAsynchronously(() -> {
+        TLeafLink.getScheduler().runTaskAsynchronously(() -> {
             if (isGroup) {
                 sendChannelMessage(message, getChannel(id));
             }
@@ -98,13 +98,13 @@ public class KookBot implements Bot {
     }
 
     public void sendChannelReply(ChannelMessageEvent e, String s) {
-        PlumBot.getScheduler().runTaskAsynchronously(() -> {
+        TLeafLink.getScheduler().runTaskAsynchronously(() -> {
             e.getMessage().reply(s);
         });
     }
 
     public void sendPrivateReply(PrivateMessageReceivedEvent e, String s) {
-        PlumBot.getScheduler().runTaskAsynchronously(() -> {
+        TLeafLink.getScheduler().runTaskAsynchronously(() -> {
             e.getMessage().reply(s);
         });
     }
@@ -117,7 +117,7 @@ public class KookBot implements Bot {
                 .setSize(Size.LG)
                 .addModule(new ContainerModule(list))
                 .build();
-        PlumBot.getScheduler().runTaskAsynchronously(() -> {
+        TLeafLink.getScheduler().runTaskAsynchronously(() -> {
             e.getMessage().reply(card);
         });
     }
@@ -130,7 +130,7 @@ public class KookBot implements Bot {
                 .setSize(Size.LG)
                 .addModule(new ContainerModule(list))
                 .build();
-        PlumBot.getScheduler().runTaskAsynchronously(() -> {
+        TLeafLink.getScheduler().runTaskAsynchronously(() -> {
             e.getMessage().reply(card);
         });
     }
@@ -148,7 +148,7 @@ public class KookBot implements Bot {
 
     private String createFile(String s) {
         try {
-            File file = File.createTempFile("PlumBot-", ".png");
+            File file = File.createTempFile("TLeafLink-", ".png");
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(TextToImg.toImgBinArray(s));
             fos.close();

@@ -1,6 +1,6 @@
 package me.linyefl.tleaflink.event.server;
 
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.config.Config;
 import me.linyefl.tleaflink.tool.TextToImg;
 import org.bukkit.Bukkit;
@@ -32,12 +32,12 @@ public class ServerManager {
 
         CommandSender commandSender = new ConsoleSender();
 
-        PlumBot.getScheduler().runTask(() -> {
+        TLeafLink.getScheduler().runTask(() -> {
             msgList.clear();
             Bukkit.dispatchCommand(commandSender, cmd);
         });
 
-        PlumBot.getScheduler().runTaskLaterAsynchronously(() -> {
+        TLeafLink.getScheduler().runTaskLaterAsynchronously(() -> {
             synchronized (returnStr) {
                 returnStr.notify();
                 StringBuilder stringBuilder = new StringBuilder();
@@ -56,7 +56,7 @@ public class ServerManager {
                     returnStr.set("无返回值");
                 }
                 if (stringBuilder.toString().length() <= 5000) {
-                    //                PlumBot.getBot().sendMsg(isGroup, stringBuilder.toString(), id);
+                    //                TLeafLink.getBot().sendMsg(isGroup, stringBuilder.toString(), id);
                     switch (Config.getBotMode()) {
                         case "go-cqhttp":
                             returnStr.set(TextToImg.toImgCQCode(stringBuilder.toString()));

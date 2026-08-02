@@ -1,6 +1,6 @@
 package me.linyefl.tleaflink.event.server;
 
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.config.Args;
 import me.linyefl.tleaflink.config.Config;
 import me.linyefl.tleaflink.config.DataBase;
@@ -27,9 +27,9 @@ import java.util.regex.Pattern;
 
 public class ServerEvent implements Listener{
 
-    private PlumBot plugin;
+    private TLeafLink plugin;
 
-    public ServerEvent(PlumBot plugin){
+    public ServerEvent(TLeafLink plugin){
         this.plugin=plugin;
     }
 
@@ -58,14 +58,14 @@ public class ServerEvent implements Listener{
             String fmsg = matcher.group().replaceAll(Args.ForwardingPrefix(), "");
             List<Long> groups = Config.getGroupQQs();
             for (long groupID : groups){
-                PlumBot.getBot().sendMsg(true, "[服务器]"+name+":"+fmsg,groupID);
+                TLeafLink.getBot().sendMsg(true, "[服务器]"+name+":"+fmsg,groupID);
             }
             return;
         }
 
         List<Long> groups = Config.getGroupQQs();
         for (long groupID : groups){
-            PlumBot.getBot().sendMsg(true, "[服务器]"+name+":"+message,groupID);
+            TLeafLink.getBot().sendMsg(true, "[服务器]"+name+":"+message,groupID);
         }
     }
 
@@ -74,25 +74,25 @@ public class ServerEvent implements Listener{
         String name = event.getName();
 
         if (Config.WhiteList()) {
-            PlumBot.getScheduler().runTaskAsynchronously(() -> {
+            TLeafLink.getScheduler().runTaskAsynchronously(() -> {
                 long qq;
-                qq = (DatabaseManager.getBindId(name, DataBase.type().toLowerCase(), PlumBot.getDatabase()));
+                qq = (DatabaseManager.getBindId(name, DataBase.type().toLowerCase(), TLeafLink.getDatabase()));
                 if (qq == 0L) {
                     event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, Args.WhitelistKick());
                     List<Long> groups = Config.getGroupQQs();
                     for (long groupID : groups) {
-                        PlumBot.getBot().sendMsg(true, "玩家" + name + "因为未在白名单中被踢出", groupID);
+                        TLeafLink.getBot().sendMsg(true, "玩家" + name + "因为未在白名单中被踢出", groupID);
                     }
                     return;
                 }
                 for (long groupID : Config.getGroupQQs()) {
-                    if(!PlumBot.getBot().checkUserInGroup(qq, groupID)){
+                    if(!TLeafLink.getBot().checkUserInGroup(qq, groupID)){
                         event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, Args.WhitelistKick());
                         List<Long> groups = Config.getGroupQQs();
                         for (long group : groups) {
-                            PlumBot.getBot().sendMsg(true, "玩家" + name + "因为未在白名单中被踢出", group);
+                            TLeafLink.getBot().sendMsg(true, "玩家" + name + "因为未在白名单中被踢出", group);
                         }
-                        DatabaseManager.removeBind(String.valueOf(qq), DataBase.type().toLowerCase(), PlumBot.getDatabase());
+                        DatabaseManager.removeBind(String.valueOf(qq), DataBase.type().toLowerCase(), TLeafLink.getDatabase());
                         return;
                     }
                 }
@@ -111,7 +111,7 @@ public class ServerEvent implements Listener{
         }
         List<Long> groups = Config.getGroupQQs();
         for (long groupID : groups){
-            PlumBot.getBot().sendMsg(true, "玩家"+name+"加入游戏",groupID);
+            TLeafLink.getBot().sendMsg(true, "玩家"+name+"加入游戏",groupID);
         }
     }
 
@@ -125,7 +125,7 @@ public class ServerEvent implements Listener{
         }
         List<Long> groups = Config.getGroupQQs();
         for (long groupID : groups){
-            PlumBot.getBot().sendMsg(true, "玩家"+name+"退出游戏",groupID);
+            TLeafLink.getBot().sendMsg(true, "玩家"+name+"退出游戏",groupID);
         }
     }
 
@@ -144,7 +144,7 @@ public class ServerEvent implements Listener{
         ServerManager.sendCmd("msg "+name+" "+msg, false);
         List<Long> groups = Config.getGroupQQs();
         for (long groupID : groups){
-            PlumBot.getBot().sendMsg(true, "玩家"+name+msg,groupID);
+            TLeafLink.getBot().sendMsg(true, "玩家"+name+msg,groupID);
         }
     }
 }

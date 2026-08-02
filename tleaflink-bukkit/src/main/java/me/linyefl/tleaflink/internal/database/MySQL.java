@@ -2,7 +2,7 @@ package me.linyefl.tleaflink.internal.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.config.DataBase;
 
 import java.sql.Connection;
@@ -22,7 +22,7 @@ public class MySQL implements Database{
                 Class.forName("com.mysql.jdbc.Driver");
                 driver = "com.mysql.jdbc.Driver";
             } catch (ClassNotFoundException ignored1) {
-                PlumBot.INSTANCE.getLogger().info("无法找到数据库驱动");
+                TLeafLink.INSTANCE.getLogger().info("无法找到数据库驱动");
             }
         }
 

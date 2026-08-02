@@ -1,6 +1,6 @@
 package me.linyefl.tleaflink.event.qq;
 
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.bot.QQBot;
 import me.linyefl.tleaflink.config.Args;
 import me.linyefl.tleaflink.config.Config;
@@ -27,7 +27,7 @@ public class QQEvent {
 
     public void onFriendMessageReceive(PrivateMessage e){
 
-        QQBot bot = (QQBot) PlumBot.getBot();
+        QQBot bot = (QQBot) TLeafLink.getBot();
 
         Pattern pattern;
         Matcher matcher;
@@ -58,7 +58,7 @@ public class QQEvent {
                 }
                 String cmd = matcher.group().replace(Prefix+"cmd ", "");
                 bot.sendMsg(false, "已发送指令至服务器",e.getUserId());
-                PlumBot.getScheduler().runTaskAsynchronously(()->{
+                TLeafLink.getScheduler().runTaskAsynchronously(()->{
                     String sendCqMsg = ServerManager.sendCmd(cmd, true);
                     bot.sendCQMsg(false, sendCqMsg, e.getUserId());
                 });
@@ -71,7 +71,7 @@ public class QQEvent {
         Pattern pattern;
         Matcher matcher;
 
-        QQBot bot = (QQBot) PlumBot.getBot();
+        QQBot bot = (QQBot) TLeafLink.getBot();
         String msg = e.getMessage();
         long groupID= e.getGroupId();
         long senderID = e.getUserId();
@@ -111,7 +111,7 @@ public class QQEvent {
                 }
                 String cmd = matcher.group().replace(Prefix+"cmd ", "");
                 bot.sendMsg(true, "已发送指令至服务器",groupID);
-                PlumBot.getScheduler().runTaskAsynchronously(()->{
+                TLeafLink.getScheduler().runTaskAsynchronously(()->{
                     String sendCqMsg = ServerManager.sendCmd(cmd, true);
                     bot.sendCQMsg(true, sendCqMsg, groupID);
                 });
@@ -129,13 +129,13 @@ public class QQEvent {
                     bot.sendMsg(true, "id不能为空", groupID);
                     return;
                 }
-                PlumBot.getScheduler().runTaskAsynchronously(() -> {
-                    long nameForId = DatabaseManager.getBindId(name, DataBase.type().toLowerCase(), PlumBot.getDatabase());
+                TLeafLink.getScheduler().runTaskAsynchronously(() -> {
+                    long nameForId = DatabaseManager.getBindId(name, DataBase.type().toLowerCase(), TLeafLink.getDatabase());
                     if (nameForId == 0L) {
                         bot.sendMsg(true, "尚未申请白名单", groupID);
                         return;
                     }
-                    DatabaseManager.removeBindid(name, DataBase.type().toLowerCase(), PlumBot.getDatabase());
+                    DatabaseManager.removeBindid(name, DataBase.type().toLowerCase(), TLeafLink.getDatabase());
                     bot.sendMsg(true, "成功移出白名单", groupID);
                 });
                 return;
@@ -152,13 +152,13 @@ public class QQEvent {
                     bot.sendMsg(true, "QQ不能为空", groupID);
                     return;
                 }
-                PlumBot.getScheduler().runTaskAsynchronously(() -> {
-                    String idForName = DatabaseManager.getBind(qq, DataBase.type().toLowerCase(), PlumBot.getDatabase());
+                TLeafLink.getScheduler().runTaskAsynchronously(() -> {
+                    String idForName = DatabaseManager.getBind(qq, DataBase.type().toLowerCase(), TLeafLink.getDatabase());
                     if (idForName == null) {
                         bot.sendMsg(true, "尚未申请白名单", groupID);
                         return;
                     }
-                    DatabaseManager.removeBind(qq, DataBase.type().toLowerCase(), PlumBot.getDatabase());
+                    DatabaseManager.removeBind(qq, DataBase.type().toLowerCase(), TLeafLink.getDatabase());
                     bot.sendMsg(true, "成功移出白名单", groupID);
                 });
                 return;
@@ -173,7 +173,7 @@ public class QQEvent {
                 String scmd = matcher.group().replace(Prefix+"", "");
                 String gcmd = Config.getCommandsYaml().getString("Admin."+scmd);
                 if(gcmd!=null) {
-                    PlumBot.getScheduler().runTaskAsynchronously(()->{
+                    TLeafLink.getScheduler().runTaskAsynchronously(()->{
                         String sendCqMsg = ServerManager.sendCmd(gcmd, true);
                         bot.sendCQMsg(true, sendCqMsg, groupID);
                     });
@@ -234,12 +234,12 @@ public class QQEvent {
                 bot.sendMsg(true, "id不能为空", groupID);
                 return;
             }
-            PlumBot.getScheduler().runTaskAsynchronously(() -> {
-                if ((DatabaseManager.getBind(String.valueOf(senderID), DataBase.type().toLowerCase(), PlumBot.getDatabase()) != null) || (DatabaseManager.getBindId(PlayerName, DataBase.type().toLowerCase(), PlumBot.getDatabase()) != 0L)) {
+            TLeafLink.getScheduler().runTaskAsynchronously(() -> {
+                if ((DatabaseManager.getBind(String.valueOf(senderID), DataBase.type().toLowerCase(), TLeafLink.getDatabase()) != null) || (DatabaseManager.getBindId(PlayerName, DataBase.type().toLowerCase(), TLeafLink.getDatabase()) != 0L)) {
                     bot.sendMsg(true, "绑定失败", groupID);
                     return;
                 }
-                DatabaseManager.addBind(PlayerName, String.valueOf(senderID), DataBase.type().toLowerCase(), PlumBot.getDatabase());
+                DatabaseManager.addBind(PlayerName, String.valueOf(senderID), DataBase.type().toLowerCase(), TLeafLink.getDatabase());
                 bot.sendMsg(true, "成功申请白名单", groupID);
             });
             return;
@@ -251,13 +251,13 @@ public class QQEvent {
             if (!Config.WhiteList()) {
                 return;
             }
-            PlumBot.getScheduler().runTaskAsynchronously(() -> {
-                String idForName = DatabaseManager.getBind(String.valueOf(senderID), DataBase.type().toLowerCase(), PlumBot.getDatabase());
+            TLeafLink.getScheduler().runTaskAsynchronously(() -> {
+                String idForName = DatabaseManager.getBind(String.valueOf(senderID), DataBase.type().toLowerCase(), TLeafLink.getDatabase());
                 if (idForName == null || idForName.isEmpty()) {
                     bot.sendMsg(true, "您尚未申请白名单", groupID);
                     return;
                 }
-                DatabaseManager.removeBind(String.valueOf(senderID), DataBase.type().toLowerCase(), PlumBot.getDatabase());
+                DatabaseManager.removeBind(String.valueOf(senderID), DataBase.type().toLowerCase(), TLeafLink.getDatabase());
                 bot.sendMsg(true, "成功移出白名单", groupID);
             });
             return;
@@ -272,7 +272,7 @@ public class QQEvent {
             String scmd = matcher.group().replace(Prefix+"", "");
             String gcmd = Config.getCommandsYaml().getString("User."+scmd);
             if(gcmd!=null) {
-                PlumBot.getScheduler().runTaskAsynchronously(()->{
+                TLeafLink.getScheduler().runTaskAsynchronously(()->{
                     String sendCqMsg = ServerManager.sendCmd(gcmd, true);
                     bot.sendCQMsg(true, sendCqMsg, groupID);
                 });
@@ -354,11 +354,11 @@ public class QQEvent {
     public void onGroupDecreaseNotice(GroupDecreaseNotice e) {
         long userId = e.getUserId();
         long groupId = e.getGroupId();
-        String player = DatabaseManager.getBind(String.valueOf(userId), DataBase.type().toLowerCase(), PlumBot.getDatabase());
+        String player = DatabaseManager.getBind(String.valueOf(userId), DataBase.type().toLowerCase(), TLeafLink.getDatabase());
         if (player == null) {
             return;
         }
-        DatabaseManager.removeBind(String.valueOf(userId), DataBase.type().toLowerCase(), PlumBot.getDatabase());
+        DatabaseManager.removeBind(String.valueOf(userId), DataBase.type().toLowerCase(), TLeafLink.getDatabase());
     }
 
 

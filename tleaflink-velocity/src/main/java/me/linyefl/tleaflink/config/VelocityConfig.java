@@ -1,6 +1,6 @@
 package me.linyefl.tleaflink.config;
 
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.internal.Config;
 import me.linyefl.tleaflink.internal.DbConfig;
 import org.yaml.snakeyaml.Yaml;
@@ -20,11 +20,11 @@ import java.util.Map;
 public class VelocityConfig {
     private static VelocityConfig Instance;
 
-    private final PlumBot plugin;
+    private final TLeafLink plugin;
     private Map<String, Object> returnsObj;
     private Map<String, Object> messagesObj;
 
-    public VelocityConfig(PlumBot plugin) {
+    public VelocityConfig(TLeafLink plugin) {
         Instance = this;
         this.plugin = plugin;
         Config.PluginDir = plugin.getDataFolder();
@@ -517,7 +517,7 @@ public class VelocityConfig {
                         "%plugin_folder%/database.db"
                 ).replace(
                         "%plugin_folder%",
-                        PlumBot.INSTANCE
+                        TLeafLink.INSTANCE
                                 .getDataFolder()
                                 .toPath()
                                 .toString()
@@ -544,21 +544,21 @@ public class VelocityConfig {
                 getString(
                         mysqlMap,
                         "database",
-                        "plumbot"
+                        "TLeafLink"
                 );
 
         DbConfig.settings.mysql.user =
                 getString(
                         mysqlMap,
                         "user",
-                        "plumbot"
+                        "TLeafLink"
                 );
 
         DbConfig.settings.mysql.password =
                 getString(
                         mysqlMap,
                         "password",
-                        "plumbot"
+                        "TLeafLink"
                 );
 
         DbConfig.settings.mysql.parameters =

@@ -2,7 +2,7 @@ package me.linyefl.tleaflink.hook;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatManager;
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -19,10 +19,10 @@ public class ResidenceHook {
             if (residence != null) {
                 hasRes = true;
                 resChatApi = Residence.getInstance().getChatManager();
-                PlumBot.INSTANCE.getLogger().info("Residence 关联成功");
+                TLeafLink.INSTANCE.getLogger().info("Residence 关联成功");
             }else{
                 hasRes = false;
-                PlumBot.INSTANCE.getLogger().info("Residence 关联失败");
+                TLeafLink.INSTANCE.getLogger().info("Residence 关联失败");
             }
         } catch (Throwable e) {
             e.printStackTrace();

@@ -1,6 +1,6 @@
 package me.linyefl.tleaflink.internal;
 
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.hook.AuthMeHook;
 import me.linyefl.tleaflink.hook.GriefDefenderHook;
 import me.linyefl.tleaflink.hook.QuickShopHook;
@@ -9,7 +9,7 @@ import me.linyefl.tleaflink.hook.ResidenceHook;
 import java.util.Iterator;
 
 public final class Environment {
-    private final PlumBot plugin = PlumBot.INSTANCE;
+    private final TLeafLink plugin = TLeafLink.INSTANCE;
     public final String name = plugin.getDescription().getName();
     public final String version = plugin.getDescription().getVersion();
     public final String author = getAuthorString();

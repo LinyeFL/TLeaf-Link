@@ -2,7 +2,7 @@ package me.linyefl.tleaflink.command;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.bot.KookBot;
 import me.linyefl.tleaflink.config.VelocityConfig;
 import me.linyefl.tleaflink.internal.Config;
@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 
 public class Commands implements SimpleCommand {
 
-    private  final PlumBot plugin;
+    private  final TLeafLink plugin;
 
-    public Commands(PlumBot plugin){
+    public Commands(TLeafLink plugin){
         this.plugin = plugin;
     }
 
@@ -50,13 +50,13 @@ public class Commands implements SimpleCommand {
                 if (source.hasPermission("tleaflink.command")) {
                     try {
                         DatabaseManager.close();
-                        if (PlumBot.getQQBot() != null) PlumBot.getQQBot().shutdown();
-                        if (PlumBot.getKookBot() != null) PlumBot.getKookBot().shutdown();
+                        if (TLeafLink.getQQBot() != null) TLeafLink.getQQBot().shutdown();
+                        if (TLeafLink.getKookBot() != null) TLeafLink.getKookBot().shutdown();
                         plugin.vconf = new VelocityConfig(plugin);
                         plugin.vconf.loadConfig();
                         DatabaseManager.start();
-                        if (PlumBot.getQQBot() != null) PlumBot.getQQBot().start();
-                        if (PlumBot.getKookBot() != null) PlumBot.getKookBot().start();
+                        if (TLeafLink.getQQBot() != null) TLeafLink.getQQBot().start();
+                        if (TLeafLink.getKookBot() != null) TLeafLink.getKookBot().start();
                         source.sendMessage(Component.text("配置文件已重新加载"));
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -80,13 +80,13 @@ public class Commands implements SimpleCommand {
                 }
                 if (args.length > 2) break;
                 if (args.length == 2) {
-                    if (PlumBot.getKookBot() == null || !PlumBot.getKookBot().isKookEnabled()) {
+                    if (TLeafLink.getKookBot() == null || !TLeafLink.getKookBot().isKookEnabled()) {
                         source.sendMessage(Component.text("kook客户端未启动"));
                         break;
                     }
                     switch (args[1]) {
                         case "plugins":
-                            Plugin[] plugins = PlumBot.getKookBot().getKookClient().getCore().getPluginManager().getPlugins();
+                            Plugin[] plugins = TLeafLink.getKookBot().getKookClient().getCore().getPluginManager().getPlugins();
                             String result = String.format("%s (%d): %s", source instanceof ConsoleCommandSender ? "Installed and running plugins" : "已安装并正在运行的插件", plugins.length, String.join(", ", (Iterable) Arrays.stream(plugins).map((plugin) -> {
                                 return plugin.getDescription().getName();
                             }).collect(Collectors.toSet())));

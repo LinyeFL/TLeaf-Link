@@ -1,7 +1,7 @@
 package me.linyefl.tleaflink.event.qq;
 
 import com.velocitypowered.api.proxy.Player;
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.bot.QQBot;
 import me.linyefl.tleaflink.internal.Config;
 import me.linyefl.tleaflink.internal.DbConfig;
@@ -68,9 +68,9 @@ public class QQEvent {
         replyCache.entrySet().removeIf(entry ->
                 now - entry.getValue().getTimestamp() > REPLY_CACHE_TTL_MS);
     }
-    private final PlumBot plugin;
+    private final TLeafLink plugin;
 
-    public QQEvent(PlumBot plugin) {
+    public QQEvent(TLeafLink plugin) {
         this.plugin = plugin;
     }
 
@@ -112,7 +112,7 @@ public class QQEvent {
             }
         }
 
-        PlumBot.getQQBot().sendMsg(
+        TLeafLink.getQQBot().sendMsg(
                 false,
                 String.join("\n", lines),
                 event.getUserId()
@@ -122,7 +122,7 @@ public class QQEvent {
     public void onGroupMessageReceive(
             GroupMessage event
     ) {
-        QQBot bot = PlumBot.getQQBot();
+        QQBot bot = TLeafLink.getQQBot();
         if (bot == null) return;
 
         String message = event.getMessage();
@@ -233,7 +233,7 @@ public class QQEvent {
 
         // 调试模式：输出原始消息到控制台
         if (debugRawMode) {
-            PlumBot.INSTANCE.getLogger().info("[DEBUG-RAW] 群消息原文: " + filteredMessage);
+            TLeafLink.INSTANCE.getLogger().info("[DEBUG-RAW] 群消息原文: " + filteredMessage);
         }
 
         // Bug 修复 1/2：把 CQ 码替换成占位文本而非删除
@@ -298,11 +298,11 @@ public class QQEvent {
                 return true;
             }
 
-            PlumBot.INSTANCE
+            TLeafLink.INSTANCE
                     .getServer()
                     .getScheduler()
                     .buildTask(
-                            PlumBot.INSTANCE,
+                            TLeafLink.INSTANCE,
                             () -> {
                                 long boundId =
                                         DatabaseManager
@@ -310,7 +310,7 @@ public class QQEvent {
                                                         playerName,
                                                         DbConfig.type
                                                                 .toLowerCase(),
-                                                        PlumBot.getDatabase()
+                                                        TLeafLink.getDatabase()
                                                 );
 
                                 if (boundId == 0L) {
@@ -328,7 +328,7 @@ public class QQEvent {
                                                 playerName,
                                                 DbConfig.type
                                                         .toLowerCase(),
-                                                PlumBot.getDatabase()
+                                                TLeafLink.getDatabase()
                                         );
 
                                 bot.sendMsg(
@@ -385,11 +385,11 @@ public class QQEvent {
             return true;
         }
 
-        PlumBot.INSTANCE
+        TLeafLink.INSTANCE
                 .getServer()
                 .getScheduler()
                 .buildTask(
-                        PlumBot.INSTANCE,
+                        TLeafLink.INSTANCE,
                         () -> {
                             String playerName =
                                     DatabaseManager
@@ -397,7 +397,7 @@ public class QQEvent {
                                                     qq,
                                                     DbConfig.type
                                                             .toLowerCase(),
-                                                    PlumBot.getDatabase()
+                                                    TLeafLink.getDatabase()
                                             );
 
                             if (playerName == null) {
@@ -414,7 +414,7 @@ public class QQEvent {
                                     qq,
                                     DbConfig.type
                                             .toLowerCase(),
-                                    PlumBot.getDatabase()
+                                    TLeafLink.getDatabase()
                             );
 
                             bot.sendMsg(
@@ -467,7 +467,7 @@ public class QQEvent {
                     "/通知 开|关 开关本群进出游戏通知"
             );
 
-            PlumBot.getQQBot().sendMsg(
+            TLeafLink.getQQBot().sendMsg(
                     true,
                     String.join("\n", helpMessages),
                     groupId
@@ -508,7 +508,7 @@ public class QQEvent {
                 }
             }
 
-            PlumBot.getQQBot().sendMsg(
+            TLeafLink.getQQBot().sendMsg(
                     true,
                     String.join("\n", lines),
                     groupId
@@ -525,7 +525,7 @@ public class QQEvent {
 
         if (applyMatcher.find()) {
             if (!Config.config.WhiteList.enable) {
-                PlumBot.getQQBot().sendMsg(true, "白名单功能未开启", groupId);
+                TLeafLink.getQQBot().sendMsg(true, "白名单功能未开启", groupId);
                 return true;
             }
 
@@ -538,7 +538,7 @@ public class QQEvent {
                             );
 
             if (playerName.isEmpty()) {
-                PlumBot.getQQBot().sendMsg(
+                TLeafLink.getQQBot().sendMsg(
                         true,
                         "id不能为空",
                         groupId
@@ -547,11 +547,11 @@ public class QQEvent {
                 return true;
             }
 
-            PlumBot.INSTANCE
+            TLeafLink.INSTANCE
                     .getServer()
                     .getScheduler()
                     .buildTask(
-                            PlumBot.INSTANCE,
+                            TLeafLink.INSTANCE,
                             () -> {
                                 String boundName =
                                         DatabaseManager
@@ -561,7 +561,7 @@ public class QQEvent {
                                                         ),
                                                         DbConfig.type
                                                                 .toLowerCase(),
-                                                        PlumBot.getDatabase()
+                                                        TLeafLink.getDatabase()
                                                 );
 
                                 long boundId =
@@ -570,12 +570,12 @@ public class QQEvent {
                                                         playerName,
                                                         DbConfig.type
                                                                 .toLowerCase(),
-                                                        PlumBot.getDatabase()
+                                                        TLeafLink.getDatabase()
                                                 );
 
                                 if (boundName != null
                                         || boundId != 0L) {
-                                    PlumBot.getQQBot()
+                                    TLeafLink.getQQBot()
                                             .sendMsg(
                                                     true,
                                                     "绑定失败",
@@ -590,10 +590,10 @@ public class QQEvent {
                                         String.valueOf(senderId),
                                         DbConfig.type
                                                 .toLowerCase(),
-                                        PlumBot.getDatabase()
+                                        TLeafLink.getDatabase()
                                 );
 
-                                PlumBot.getQQBot().sendMsg(
+                                TLeafLink.getQQBot().sendMsg(
                                         true,
                                         "成功申请白名单",
                                         groupId
@@ -610,15 +610,15 @@ public class QQEvent {
         }
 
         if (!Config.config.WhiteList.enable) {
-            PlumBot.getQQBot().sendMsg(true, "白名单功能未开启", groupId);
+            TLeafLink.getQQBot().sendMsg(true, "白名单功能未开启", groupId);
             return true;
         }
 
-        PlumBot.INSTANCE
+        TLeafLink.INSTANCE
                 .getServer()
                 .getScheduler()
                 .buildTask(
-                        PlumBot.INSTANCE,
+                        TLeafLink.INSTANCE,
                         () -> {
                             String playerName =
                                     DatabaseManager
@@ -628,12 +628,12 @@ public class QQEvent {
                                                     ),
                                                     DbConfig.type
                                                             .toLowerCase(),
-                                                    PlumBot.getDatabase()
+                                                    TLeafLink.getDatabase()
                                             );
 
                             if (playerName == null
                                     || playerName.isEmpty()) {
-                                PlumBot.getQQBot()
+                                TLeafLink.getQQBot()
                                         .sendMsg(
                                                 true,
                                                 "您尚未申请白名单",
@@ -647,10 +647,10 @@ public class QQEvent {
                                     String.valueOf(senderId),
                                     DbConfig.type
                                             .toLowerCase(),
-                                    PlumBot.getDatabase()
+                                    TLeafLink.getDatabase()
                             );
 
-                            PlumBot.getQQBot().sendMsg(
+                            TLeafLink.getQQBot().sendMsg(
                                     true,
                                     "成功移出白名单",
                                     groupId
@@ -683,7 +683,7 @@ public class QQEvent {
             return false;
         }
 
-        PlumBot.getQQBot().sendMsg(
+        TLeafLink.getQQBot().sendMsg(
                 true,
                 String.valueOf(reply),
                 groupId
@@ -1075,7 +1075,7 @@ public class QQEvent {
                 DatabaseManager.getBind(
                         String.valueOf(userId),
                         DbConfig.type.toLowerCase(),
-                        PlumBot.getDatabase()
+                        TLeafLink.getDatabase()
                 );
 
         if (playerName == null) {
@@ -1085,7 +1085,7 @@ public class QQEvent {
         DatabaseManager.removeBindid(
                 playerName,
                 DbConfig.type.toLowerCase(),
-                PlumBot.getDatabase()
+                TLeafLink.getDatabase()
         );
     }
 }

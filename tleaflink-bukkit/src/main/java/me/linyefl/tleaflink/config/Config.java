@@ -1,6 +1,6 @@
 package me.linyefl.tleaflink.config;
 
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class Config {
-    private static final PlumBot INSTANCE = PlumBot.INSTANCE;
+    private static final TLeafLink INSTANCE = TLeafLink.INSTANCE;
     private static final File botFile = new File(INSTANCE.getDataFolder(), "bot.yml");
     private static final File configFile = new File(INSTANCE.getDataFolder(), "config.yml");
     private static final File returnsFile = new File(INSTANCE.getDataFolder(), "returns.yml");

@@ -4,7 +4,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import sdk.anno.Param;
 import sdk.config.CQConfig;
 
@@ -146,7 +146,7 @@ public class Client {
             return paramMap;
         } catch (Exception e) {
 //            log.error(e);
-            PlumBot.INSTANCE.getSLF4JLogger().error(Arrays.toString(e.getStackTrace()));
+            TLeafLink.INSTANCE.getSLF4JLogger().error(Arrays.toString(e.getStackTrace()));
         }
         return null;
     }

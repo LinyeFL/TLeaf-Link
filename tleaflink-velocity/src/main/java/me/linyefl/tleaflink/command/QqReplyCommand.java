@@ -2,7 +2,7 @@ package me.linyefl.tleaflink.command;
 
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.bot.QQBot;
 import me.linyefl.tleaflink.event.qq.QQEvent;
 import net.kyori.adventure.text.Component;
@@ -46,7 +46,7 @@ public class QqReplyCommand implements SimpleCommand {
             return;
         }
 
-        QQBot qqBot = (QQBot) PlumBot.getBot();
+        QQBot qqBot = (QQBot) TLeafLink.getBot();
         if (qqBot == null) {
             player.sendMessage(
                 Component.text("QQ Bot 未启动", NamedTextColor.RED)
@@ -62,7 +62,7 @@ public class QqReplyCommand implements SimpleCommand {
         LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacyAmpersand();
         Component mcBroadcast = legacySerializer.deserialize(
                 "&6[QQ回复] &f" + player.getUsername() + " &7→ &f" + replyInfo.getQqNickname() + "&7: " + message);
-        PlumBot.INSTANCE.getServer().getAllPlayers().forEach(p -> p.sendMessage(mcBroadcast));
+        TLeafLink.INSTANCE.getServer().getAllPlayers().forEach(p -> p.sendMessage(mcBroadcast));
         
         player.sendMessage(
             Component.text("已回复 " + replyInfo.getQqNickname() + "：" + message, NamedTextColor.GREEN)

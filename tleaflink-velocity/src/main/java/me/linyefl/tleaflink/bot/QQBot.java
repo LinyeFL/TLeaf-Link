@@ -1,6 +1,6 @@
 package me.linyefl.tleaflink.bot;
 
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.event.qq.QQEvent;
 import me.linyefl.tleaflink.internal.Config;
 import sdk.client.ClientFactory;
@@ -21,11 +21,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class QQBot implements Bot {
 
-    public QQBot(PlumBot plugin) {
+    public QQBot(TLeafLink plugin) {
         this.plugin = plugin;
     }
 
-    private PlumBot plugin;
+    private TLeafLink plugin;
     private static CQConfig http_config;
     private GroupClient client;
     private MessageClient messageClient;
@@ -136,7 +136,7 @@ public class QQBot implements Bot {
 
                 for (long groupID : groups) {
                     sendGroupMsg(
-                            "PlumBot已启动",
+                            "TLeafLink已启动",
                             groupID
                     );
                 }
@@ -154,7 +154,7 @@ public class QQBot implements Bot {
             for (long groupID : groups) {
                 sendMsg(
                         true,
-                        "PlumBot已关闭",
+                        "TLeafLink已关闭",
                         groupID
                 );
             }

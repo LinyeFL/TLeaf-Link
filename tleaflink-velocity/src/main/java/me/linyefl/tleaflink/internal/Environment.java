@@ -1,11 +1,11 @@
 package me.linyefl.tleaflink.internal;
 
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 
 import java.util.Iterator;
 
 public final class Environment {
-    private final PlumBot plugin = PlumBot.INSTANCE;
+    private final TLeafLink plugin = TLeafLink.INSTANCE;
     public final String name = plugin.getPluginContainer().getDescription().getName().get();
     public final String version = plugin.getPluginContainer().getDescription().getVersion().get();
     public final String author = getAuthorString();

@@ -1,11 +1,11 @@
 package me.linyefl.tleaflink.config;
 
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 
 public class DataBase {
 
     public static String type() {return Config.getConfigYaml().getString("database.type");}
-    public static String sqlite_path() {return Config.getConfigYaml().getString("database.settings.sqlite.path").replace("%plugin_folder%", PlumBot.INSTANCE.getDataFolder().toPath().toString());}
+    public static String sqlite_path() {return Config.getConfigYaml().getString("database.settings.sqlite.path").replace("%plugin_folder%", TLeafLink.INSTANCE.getDataFolder().toPath().toString());}
     public static String mysql_host() {return Config.getConfigYaml().getString("database.settings.mysql.host");}
     public static String mysql_port() {return Config.getConfigYaml().getString("database.settings.mysql.port");}
     public static String mysql_database() {return Config.getConfigYaml().getString("database.settings.mysql.database");}

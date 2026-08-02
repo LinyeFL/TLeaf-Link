@@ -1,6 +1,6 @@
 package me.linyefl.tleaflink.bot;
 
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.event.kook.KookEvent;
 import me.linyefl.tleaflink.internal.Config;
 import me.linyefl.tleaflink.internal.kook.KookClient;
@@ -28,16 +28,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static me.linyefl.tleaflink.PlumBot.INSTANCE;
+import static me.linyefl.tleaflink.TLeafLink.INSTANCE;
 
 public class KookBot implements Bot {
 
-    private final PlumBot plugin;
+    private final TLeafLink plugin;
     private KBCClient kookClient;
     private boolean kookEnabled = false;
     private boolean debug;
 
-    public KookBot(PlumBot plugin) {
+    public KookBot(TLeafLink plugin) {
         this.plugin = plugin;
         this.debug = Config.bot.Bot.kook.Debug;
     }
@@ -97,7 +97,7 @@ public class KookBot implements Bot {
             List<String> groups = Config.bot.KookGroups;
             if (groups != null) {
                 for (String groupIDStr : groups) {
-                    sendMsg(true, "PlumBot已启动", Long.parseLong(groupIDStr));
+                    sendMsg(true, "TLeafLink已启动", Long.parseLong(groupIDStr));
                 }
             }
             if (debug) {
@@ -117,7 +117,7 @@ public class KookBot implements Bot {
             if (groups != null) {
                 for (String groupIDStr : groups) {
                     long groupID = Long.parseLong(groupIDStr);
-                    sendChannelMessage("PlumBot已关闭", getChannel(groupID));
+                    sendChannelMessage("TLeafLink已关闭", getChannel(groupID));
                 }
             }
         }

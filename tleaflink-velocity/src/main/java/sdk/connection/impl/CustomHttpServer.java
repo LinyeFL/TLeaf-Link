@@ -3,7 +3,7 @@ package sdk.connection.impl;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import sdk.connection.Connection;
 
 import java.io.BufferedReader;
@@ -34,7 +34,7 @@ public class CustomHttpServer implements Connection {
             server.createContext(path, new CustomHttpHandler());
         } catch (IOException e) {
 //            log.error(e);
-            PlumBot.INSTANCE.getLogger().error(Arrays.toString(e.getStackTrace()));
+            TLeafLink.INSTANCE.getLogger().error(Arrays.toString(e.getStackTrace()));
         }
         this.queue = queue;
     }
@@ -43,7 +43,7 @@ public class CustomHttpServer implements Connection {
     public void create() {
         server.start();
 //        log.info("HTTP服务器启动，正在监听端口：{}", port);
-        PlumBot.INSTANCE.getLogger().info("HTTP服务器启动，正在监听端口："+port);
+        TLeafLink.INSTANCE.getLogger().info("HTTP服务器启动，正在监听端口："+port);
     }
 
     class CustomHttpHandler implements HttpHandler {
@@ -65,6 +65,6 @@ public class CustomHttpServer implements Connection {
     public void stop() {
         server.stop(0);
 //        log.info("HTTP服务器启动，正在监听端口：{}", port);
-        PlumBot.INSTANCE.getLogger().info("HTTP服务器已停止");
+        TLeafLink.INSTANCE.getLogger().info("HTTP服务器已停止");
     }
 }

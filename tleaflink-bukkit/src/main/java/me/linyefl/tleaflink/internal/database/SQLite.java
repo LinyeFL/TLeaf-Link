@@ -2,7 +2,7 @@ package me.linyefl.tleaflink.internal.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.config.DataBase;
 
 import java.io.File;
@@ -21,12 +21,12 @@ public class SQLite implements Database{
             Class.forName("org.sqlite.JDBC");
             driver = "org.sqlite.JDBC";
         } catch (ClassNotFoundException ignored) {
-            PlumBot.INSTANCE.getLogger().info("无法找到数据库驱动");
+            TLeafLink.INSTANCE.getLogger().info("无法找到数据库驱动");
         }
 
         HikariConfig config = new HikariConfig();
         config.setDriverClassName(driver);
-        config.setPoolName("PlumBot-SQLite");
+        config.setPoolName("TLeafLink-SQLite");
         config.setJdbcUrl("jdbc:sqlite:" + new File(DataBase.sqlite_path()).getPath());
         if (!DataBase.pool_connectionTestQuery().isEmpty()){
             config.setConnectionTestQuery(DataBase.pool_connectionTestQuery());

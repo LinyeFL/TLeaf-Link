@@ -1,7 +1,7 @@
 package sdk.event;
 
 import cn.hutool.json.JSONUtil;
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import sdk.event.global.Message;
 import sdk.listener.EnableListener;
 import sdk.listener.Listener;
@@ -66,7 +66,7 @@ public class EventDispatchers implements Runnable {
                 this.runTask();
             } catch (Exception e) {
 //                log.warn(e);
-//                PlumBot.INSTANCE.getLogger().warn(Arrays.toString(e.getStackTrace()));
+//                TLeafLink.INSTANCE.getLogger().warn(Arrays.toString(e.getStackTrace()));
             }
         }
     }
@@ -111,7 +111,7 @@ public class EventDispatchers implements Runnable {
             return this.queue.take();
         } catch (Exception e) {
 //            log.error(e);
-            PlumBot.INSTANCE.getLogger().error(Arrays.toString(e.getStackTrace()));
+            TLeafLink.INSTANCE.getLogger().error(Arrays.toString(e.getStackTrace()));
         }
         return null;
     }

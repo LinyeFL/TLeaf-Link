@@ -1,6 +1,6 @@
 package me.linyefl.tleaflink.internal.database;
 
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 import me.linyefl.tleaflink.internal.DbConfig;
 
 import javax.annotation.Nullable;
@@ -16,28 +16,28 @@ public class DatabaseManager {
             switch (DbConfig.type.toLowerCase()) {
                 case "sqlite":
                 default: {
-                    PlumBot.INSTANCE.getLogger().info("Initializing SQLite database.");
-                    PlumBot.INSTANCE.setDatabase(new SQLite());
+                    TLeafLink.INSTANCE.getLogger().info("Initializing SQLite database.");
+                    TLeafLink.INSTANCE.setDatabase(new SQLite());
                     break;
                 }
                 case "mysql": {
-                    PlumBot.INSTANCE.getLogger().info("Initializing MySQL database.");
-                    PlumBot.INSTANCE.setDatabase(new MySQL());
+                    TLeafLink.INSTANCE.getLogger().info("Initializing MySQL database.");
+                    TLeafLink.INSTANCE.setDatabase(new MySQL());
                     break;
                 }
             }
-            PlumBot.getDatabase().initialize();
+            TLeafLink.getDatabase().initialize();
         } catch (ClassNotFoundException e) {
-            PlumBot.INSTANCE.getLogger().warn("Failed to initialize database, reason: " + e);
+            TLeafLink.INSTANCE.getLogger().warn("Failed to initialize database, reason: " + e);
         }
     }
 
     public static void close(){
-        PlumBot.INSTANCE.getLogger().info("Closing database.");
+        TLeafLink.INSTANCE.getLogger().info("Closing database.");
         try {
-            PlumBot.getDatabase().close();
+            TLeafLink.getDatabase().close();
         } catch (SQLException e) {
-            PlumBot.INSTANCE.getLogger().warn("在关闭数据库时出现错误" + e);
+            TLeafLink.INSTANCE.getLogger().warn("在关闭数据库时出现错误" + e);
         }
 
     }

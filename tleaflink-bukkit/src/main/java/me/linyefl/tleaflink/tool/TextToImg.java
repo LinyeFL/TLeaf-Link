@@ -1,6 +1,6 @@
 package me.linyefl.tleaflink.tool;
 
-import me.linyefl.tleaflink.PlumBot;
+import me.linyefl.tleaflink.TLeafLink;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
@@ -12,7 +12,7 @@ import java.util.Base64;
 public class TextToImg {
     private static Font font=null;
     private static FontMetrics fm=null;
-    private static final File ttfFile = new File(PlumBot.INSTANCE.getDataFolder(), "MiSans-Normal.ttf");
+    private static final File ttfFile = new File(TLeafLink.INSTANCE.getDataFolder(), "MiSans-Normal.ttf");
     private static byte[] toImg(String text) throws IOException {
         if (fm ==null){
             try {
@@ -157,7 +157,7 @@ public class TextToImg {
             data = swapStream.toByteArray();
             return Base64.getEncoder().encodeToString(data);
         } catch (IOException e) {
-            PlumBot.INSTANCE.getSLF4JLogger().error(e.toString());
+            TLeafLink.INSTANCE.getSLF4JLogger().error(e.toString());
         } finally {
             if (is != null) {
                 try {
@@ -194,7 +194,7 @@ public class TextToImg {
         try {
             base64 = getBase64FromInputStream(toImg(string));
         } catch (Exception e) {
-            PlumBot.INSTANCE.getSLF4JLogger().error(e.toString());
+            TLeafLink.INSTANCE.getSLF4JLogger().error(e.toString());
         }
         return "[CQ:image,file=base64://"+base64+"]";
     }
@@ -204,7 +204,7 @@ public class TextToImg {
         try {
             bytes = bytes2String(toImg(string));
         } catch (IOException e) {
-            PlumBot.INSTANCE.getSLF4JLogger().error(e.toString());
+            TLeafLink.INSTANCE.getSLF4JLogger().error(e.toString());
         }
         return bytes;
     }
