@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class InfoChannelListener {
 
-    public static final String CHANNEL_INFO = "tleaflink:info";   // 子服 -> 代理
+    public static final String CHANNEL_INFO = "tleaflink:info"; // 子服 -> 代理
     public static final String CHANNEL_HELLO = "tleaflink:hello"; // 代理 -> 子服
 
     private final TLeafLink plugin;
@@ -53,22 +53,23 @@ public class InfoChannelListener {
     }
 
     private void forward(String serverName, String type, String content) {
-        String label;
-        switch (type) {
-            case "death":
-                label = "死亡";
-                break;
-            case "advancement":
-                label = "进度";
-                break;
-            default:
-                label = type;
-        }
         String displayName = ServerEvent.getServerDisplayName(serverName);
-        String message = ServerEvent.format("[{label}] {content}（{server}）",
-                "{label}", label,
-                "{content}", content,
-                "{server}", displayName);
+        // bukkit 端新格式：玩家名 + \u0000 + 内容（成就为中文译名，死亡为去掉玩家名的描述）
+        String[] parts = content.split("\u0000", 2);
+        String message;
+        if (parts.length < 2) {
+            // 兼容旧格式上报
+            String label = "death".equals(type) ? "死亡" : ("advancement".equals(type) ? "进度" : type);
+            message = ServerEvent.format("[{label}] {content}（{server}）",
+                    "{label}", label, "{content}", content, "{server}", displayName);
+        } else if ("death".equals(type)) {
+            message = "[死亡] " + displayName + "中 " + parts[0] + " \"" + parts[1] + "\"";
+        } else if ("advancement".equals(type)) {
+            message = "[进度] " + parts[0] + " 在" + displayName + "获得了成就 " + parts[1];
+        } else {
+            message = ServerEvent.format("[{label}] {content}（{server}）",
+                    "{label}", type, "{content}", content, "{server}", displayName);
+        }
         // 复用通知转发（受各群 /通知 开关控制）
         ServerEvent.sendNotificationToAllPlatforms(message);
     }
