@@ -174,12 +174,12 @@ public class InfoListener implements Listener {
         if (raw == null) {
             return;
         }
-        // Paper 26.2 返回的 deathMessage 已根据客户端语言翻译好，直接转纯文本
+        // Paper 26.2 返回的 deathMessage 已渲染成英文文本，转纯文本后按模板翻译成中文
         String full = PlainTextComponentSerializer.plainText().serialize(raw);
         String desc = full.startsWith(player.getName())
                 ? full.substring(player.getName().length()).trim()
                 : full;
-        send("death", player.getName() + "\u0000" + desc);
+        send("death", player.getName() + "\u0000" + DeathTranslator.translate(desc));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

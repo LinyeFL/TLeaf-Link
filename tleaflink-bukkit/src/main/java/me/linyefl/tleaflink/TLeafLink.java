@@ -27,6 +27,8 @@ public final class TLeafLink extends JavaPlugin implements PluginMessageListener
 
         // 注册事件监听器（死亡、成就上报）
         getServer().getPluginManager().registerEvents(new InfoListener(this), this);
+        // 死亡消息反射探测（验证 NMS 路径，验证通过后删掉）
+        getServer().getPluginManager().registerEvents(new DeathReflectionProbe(this), this);
 
         // 每 5 秒检查一次与 velocity 的连接状态
         getServer().getScheduler().runTaskTimerAsynchronously(this, this::checkLink, 100L, 100L);
