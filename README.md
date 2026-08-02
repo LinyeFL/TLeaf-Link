@@ -3,7 +3,7 @@
 多功能 QQ/KOOK 群服互通机器人插件，专为**白叶（White Leaf）MC 服务器**定制开发。
 
 [![License](https://img.shields.io/badge/license-AGPL%203.0-blue.svg)](./LICENSE)
-[![Minecraft](https://img.shields.io/badge/Minecraft-1.26.2-brightgreen.svg)]()
+[![Minecraft](https://img.shields.io/badge/Minecraft-26.2-brightgreen.svg)]()
 [![Velocity](https://img.shields.io/badge/Velocity-3.x-9cf.svg)]()
 
 ## 功能
