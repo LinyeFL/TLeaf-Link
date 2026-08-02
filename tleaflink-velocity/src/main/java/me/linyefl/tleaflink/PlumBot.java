@@ -30,7 +30,7 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.nio.file.Path;
 
-@Plugin(id = "tleaflink", name = "TLeaf-Link", version = "1.0.0",
+@Plugin(id = "tleaflink", name = "TLeaf-Link", version = "@version@",
         url = "https://github.com/LinyeFL/TLeaf-Link", description = "TLeaf-Link 跨服聊天机器人", authors = {"LinyeFL"})
 public class PlumBot {
 
