@@ -28,7 +28,7 @@ public class MySQL implements Database{
 
         HikariConfig config = new HikariConfig();
         config.setDriverClassName(driver);
-        config.setPoolName("PlumBot-MySQL");
+        config.setPoolName("TLeafLink-MySQL");
         config.setJdbcUrl("jdbc:mysql://" + DataBase.mysql_host() +":"+ DataBase.mysql_port() + "/" + DataBase.mysql_database() + DataBase.mysql_parameters());
         config.setUsername(DataBase.mysql_username());
         config.setPassword(DataBase.mysql_password());
