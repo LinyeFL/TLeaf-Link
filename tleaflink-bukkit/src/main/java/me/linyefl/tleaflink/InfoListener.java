@@ -173,6 +173,34 @@ public class InfoListener implements Listener {
         registerZhCn();
     }
 
+    /** 把 Minecraft 的 %s / %1$s 占位符转换成 MessageFormat 的 {0} / {1} 格式 */
+    private static String mcToMessageFormat(String value) {
+        StringBuilder sb = new StringBuilder();
+        int auto = 0;
+        for (int i = 0; i < value.length(); i++) {
+            char c = value.charAt(i);
+            if (c == '%' && i + 1 < value.length()) {
+                char n = value.charAt(i + 1);
+                if (n == 's' || n == 'd') {
+                    sb.append('{').append(auto++).append('}');
+                    i++;
+                    continue;
+                }
+                int j = i + 1;
+                while (j < value.length() && Character.isDigit(value.charAt(j))) j++;
+                if (j > i + 1 && j < value.length() && value.charAt(j) == '$'
+                    && j + 1 < value.length() && (value.charAt(j + 1) == 's' || value.charAt(j + 1) == 'd')) {
+                    int idx = Integer.parseInt(value.substring(i + 1, j)) - 1;
+                    sb.append('{').append(idx).append('}');
+                    i = j + 1;
+                    continue;
+                }
+            }
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+
     /** 加载官方 zh_cn 语言文件，让死亡消息能渲染成游戏内中文 */
     private void registerZhCn() {
         try (InputStream in = plugin.getResource("zh_cn.json")) {
@@ -183,7 +211,7 @@ public class InfoListener implements Listener {
             Map<String, String> map = new HashMap<>();
             JsonParser.parseReader(new InputStreamReader(in, StandardCharsets.UTF_8))
                     .getAsJsonObject().entrySet()
-                    .forEach(e -> map.put(e.getKey(), e.getValue().getAsString()));
+                    .forEach(e -> map.put(e.getKey(), mcToMessageFormat(e.getValue().getAsString())));
             TranslationRegistry registry = TranslationRegistry.create(Key.key("tleaflink", "zh_cn"));
             registry.registerAll(Locale.SIMPLIFIED_CHINESE, map.keySet(), key -> new java.text.MessageFormat(map.get(key)));
             GlobalTranslator.translator().addSource(registry);
@@ -196,17 +224,15 @@ public class InfoListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerDeath(PlayerDeathEvent event) {
         if (!plugin.isLinked()) {
-            return; // 未连接 velocity 不上报
+            return;
         }
         Player player = event.getEntity();
         Component raw = event.deathMessage();
         if (raw == null) {
-            return; // 被插件隐藏的死亡消息
+            return;
         }
-        // 渲染成游戏内中文，如 "Linye_FL 被苦力怕炸死了"
         String full = PlainTextComponentSerializer.plainText()
                 .serialize(GlobalTranslator.render(raw, Locale.SIMPLIFIED_CHINESE));
-        // 去掉开头的玩家名，只留描述，如 "被苦力怕炸死了"
         String desc = full.startsWith(player.getName())
                 ? full.substring(player.getName().length()).trim()
                 : full;
@@ -219,11 +245,11 @@ public class InfoListener implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        String key = event.getAdvancement().getKey().getKey(); // 形如 story/root
+        String key = event.getAdvancement().getKey().getKey();
         if (key.startsWith("recipes/")) {
-            return; // 配方解锁不转发，太吵且玩家无感知
+            return;
         }
-        String name = ADVANCEMENT_NAMES.getOrDefault(key, key); // 未收录时回退显示原始 key
+        String name = ADVANCEMENT_NAMES.getOrDefault(key, key);
         send("advancement", player.getName() + "\u0000" + name);
     }
 
