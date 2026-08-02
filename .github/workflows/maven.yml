@@ -1,25 +1,20 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
- 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
- 
 name: Java CI with Maven
- 
+
 on:
   push:
     branches: [ "main" ]
+    tags: [ "v*" ]
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
- 
+
+permissions:
+  contents: write
+
 jobs:
   build:
- 
     runs-on: ubuntu-latest
- 
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 21
@@ -41,15 +36,23 @@ jobs:
         mvn install:install-file -Dfile="$JAR" -DgroupId=io.github.snwcreations -DartifactId=KookBC -Dversion=0.33.0 -Dpackaging=jar
     - name: Build with Maven
       run: mvn -B package --file pom.xml
- 
+
     - name: Upload a Build Artifact - TLeaf-Link-bukkit
       uses: actions/upload-artifact@v4
       with:
         name: "TLeaf-Link-bukkit.jar"
         path: 'tleaflink-bukkit/target/TLeafLink-bukkit-*.jar'
- 
+
     - name: Upload a Build Artifact - TLeaf-Link-velocity
       uses: actions/upload-artifact@v4
       with:
         name: "TLeaf-Link-velocity.jar"
         path: 'tleaflink-velocity/target/TLeafLink-velocity-*.jar'
+
+    - name: Create GitHub Release
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          tleaflink-bukkit/target/TLeafLink-bukkit-*.jar
+          tleaflink-velocity/target/TLeafLink-velocity-*.jar
