@@ -1,6 +1,6 @@
 name: TLeafLink
 version: '${project.version}'
-main: me.linyefl.tleaflink.PlumBot
+main: me.linyefl.tleaflink.TLeafLink
 api-version: 1.13
 prefix: TLeafLink
 authors: [ LinyeFL ]
