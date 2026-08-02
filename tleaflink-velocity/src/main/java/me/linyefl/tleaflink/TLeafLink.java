@@ -11,6 +11,7 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.messages.LegacyChannelIdentifier;
 import me.linyefl.tleaflink.bot.Bot;
 import me.linyefl.tleaflink.bot.KookBot;
 import me.linyefl.tleaflink.bot.QQBot;
@@ -80,7 +81,7 @@ public class TLeafLink {
         logger.info("服务器事件监听器注册成功");
         // 注册插件消息通道 + 事件监听器（子服死亡/成就上报）
         server.getChannelRegistrar().register(
-                server.getChannelRegistrar().getOrCreate(InfoChannelListener.CHANNEL_INFO)
+                new LegacyChannelIdentifier(InfoChannelListener.CHANNEL_INFO)
         );
         InfoChannelListener infoListener = new InfoChannelListener(this);
         server.getEventManager().register(this, infoListener);

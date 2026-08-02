@@ -771,7 +771,7 @@ public class QQEvent {
 
     // 改进4：检查当前群的通知开关（默认开）
     @SuppressWarnings("unchecked")
-    private static boolean isNotifyEnabled(long groupId) {
+    private boolean isNotifyEnabled(long groupId) {
         return getGroupSwitch(groupId, "notify", true);
     }
 

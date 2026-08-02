@@ -4,6 +4,7 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
+import com.velocitypowered.api.proxy.messages.LegacyChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import me.linyefl.tleaflink.TLeafLink;
 
@@ -74,7 +75,7 @@ public class InfoChannelListener {
 
     /** 每 30 秒向所有子服广播握手，bukkit 端据此判断连接状态 */
     public void startHelloTask() {
-        ChannelIdentifier hello = plugin.getServer().getChannelRegistrar().getOrCreate(CHANNEL_HELLO);
+        ChannelIdentifier hello = new LegacyChannelIdentifier(CHANNEL_HELLO);
         plugin.getServer().getScheduler().buildTask(plugin, () -> {
             byte[] data = new byte[0];
             for (RegisteredServer target : plugin.getServer().getAllServers()) {
