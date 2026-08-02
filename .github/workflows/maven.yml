@@ -46,10 +46,10 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: "TLeaf-Link-bukkit.jar"
-        path: 'tleaflink-bukkit/target/tleaflink-bukkit-*.jar'
+        path: 'tleaflink-bukkit/target/TLeafLink-bukkit-*.jar'
  
     - name: Upload a Build Artifact - TLeaf-Link-velocity
       uses: actions/upload-artifact@v4
       with:
         name: "TLeaf-Link-velocity.jar"
-        path: 'tleaflink-velocity/target/tleaflink-velocity-*.jar'
+        path: 'tleaflink-velocity/target/TLeafLink-velocity-*.jar'
