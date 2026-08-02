@@ -26,9 +26,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class PlumBot extends JavaPlugin implements Listener {
+public final class TLeafLink extends JavaPlugin implements Listener {
 
-    public static PlumBot INSTANCE;
+    public static TLeafLink INSTANCE;
 
     private static TaskScheduler scheduler;
 
@@ -168,7 +168,7 @@ public final class PlumBot extends JavaPlugin implements Listener {
         return database;
     }
     public void setDatabase(Database database) {
-        PlumBot.database = database;
+        TLeafLink.database = database;
     }
     public Environment getEnvironment() {return environment;}
 }
