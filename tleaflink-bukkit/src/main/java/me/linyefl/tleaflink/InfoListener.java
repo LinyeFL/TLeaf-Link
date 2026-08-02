@@ -185,7 +185,7 @@ public class InfoListener implements Listener {
                     .getAsJsonObject().entrySet()
                     .forEach(e -> map.put(e.getKey(), e.getValue().getAsString()));
             TranslationRegistry registry = TranslationRegistry.create(Key.key("tleaflink", "zh_cn"));
-            registry.registerAll(Locale.SIMPLIFIED_CHINESE, map, false);
+            registry.registerAll(Locale.SIMPLIFIED_CHINESE, map.keySet(), key -> new java.text.MessageFormat(map.get(key)));
             GlobalTranslator.translator().addSource(registry);
             plugin.getLogger().info("zh_cn 语言文件已加载（" + map.size() + " 条）");
         } catch (Exception e) {
