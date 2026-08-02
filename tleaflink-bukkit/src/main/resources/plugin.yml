@@ -1,9 +1,9 @@
-name: PlumBot
+name: TLeafLink
 version: '${project.version}'
 main: me.linyefl.tleaflink.PlumBot
 api-version: 1.13
-prefix: PlumBot
-authors: [ Linear,RegadPole ]
+prefix: TLeafLink
+authors: [ LinyeFL ]
 folia-supported: true
 softdepend:
   - AuthMe
@@ -11,9 +11,9 @@ softdepend:
   - Residence
 
 commands:
-  plumbot:
-    aliases: [pb,PlumBot]
-    description: PlumBot基本命令.
+  tleaflink:
+    aliases: [tll]
+    description: TLeaf-Link基本命令.
     usage: /<command>
-    permission: plumbot.command
+    permission: tleaflink.command
     permission-message: 你不能执行它.
