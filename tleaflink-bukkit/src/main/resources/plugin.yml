@@ -4,16 +4,3 @@ main: me.linyefl.tleaflink.TLeafLink
 api-version: 1.13
 prefix: TLeafLink
 authors: [ LinyeFL ]
-folia-supported: true
-softdepend:
-  - AuthMe
-  - QuickShop
-  - Residence
-
-commands:
-  tleaflink:
-    aliases: [tll]
-    description: TLeaf-Link基本命令.
-    usage: /<command>
-    permission: tleaflink.command
-    permission-message: 你不能执行它.

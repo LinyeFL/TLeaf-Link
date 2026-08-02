@@ -1,174 +1,65 @@
 package me.linyefl.tleaflink;
 
-import com.github.Anon8281.universalScheduler.UniversalScheduler;
-import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
-import me.linyefl.tleaflink.bot.Bot;
-import me.linyefl.tleaflink.bot.KookBot;
-import me.linyefl.tleaflink.bot.QQBot;
-import me.linyefl.tleaflink.command.Commands;
-import me.linyefl.tleaflink.config.Config;
-import me.linyefl.tleaflink.event.server.QsChatEvent;
-import me.linyefl.tleaflink.event.server.QsHikariChatEvent;
-import me.linyefl.tleaflink.event.server.ServerEvent;
-import me.linyefl.tleaflink.hook.AuthMeHook;
-import me.linyefl.tleaflink.hook.GriefDefenderHook;
-import me.linyefl.tleaflink.hook.QuickShopHook;
-import me.linyefl.tleaflink.hook.ResidenceHook;
-import me.linyefl.tleaflink.internal.Dependencies;
-import me.linyefl.tleaflink.internal.Environment;
-import me.linyefl.tleaflink.internal.FoliaSupport;
-import me.linyefl.tleaflink.internal.database.Database;
-import me.linyefl.tleaflink.internal.database.DatabaseManager;
-import me.linyefl.tleaflink.internal.maven.LibraryLoader;
-import me.linyefl.tleaflink.metrics.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.event.Listener;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 
-public final class TLeafLink extends JavaPlugin implements Listener {
+public final class TLeafLink extends JavaPlugin implements PluginMessageListener {
+
+    // 子服 -> 代理：事件上报通道
+    public static final String CHANNEL_INFO = "tleaflink:info";
+    // 代理 -> 子服：握手通道
+    public static final String CHANNEL_HELLO = "tleaflink:hello";
 
     public static TLeafLink INSTANCE;
 
-    private static TaskScheduler scheduler;
-
-    private static Database database;
-    private static QQBot qqBot;
-    private static KookBot kookBot;
-    private static Environment environment;
-
-    @Override
-    public void onLoad() {
-        INSTANCE = this;
-
-        if (Bukkit.getName().equals("Folia")) FoliaSupport.isFolia = true;
-
-        Config.createConfig();
-
-        LibraryLoader.loadAll(Dependencies.class);
-        getLogger().info("TLeaf-Link依赖已加载成功");
-    }
+    private boolean linked = false;
+    private long lastHelloAt = 0;
 
     @Override
     public void onEnable() {
+        INSTANCE = this;
 
-        DatabaseManager.start();
-        scheduler = UniversalScheduler.getScheduler(this);
-        Bukkit.getPluginManager().registerEvents(this, this);
-        AuthMeHook.hookAuthme();
-        ResidenceHook.hookRes();
-        QuickShopHook.hookQuickShop();
-        GriefDefenderHook.hookGriefDefender();
-        getLogger().info("关联插件连接完毕");
-        Bukkit.getPluginManager().registerEvents(new ServerEvent(this), this);
-        if (QuickShopHook.hasQs) Bukkit.getPluginManager().registerEvents(new QsChatEvent(),this);
-        if (QuickShopHook.hasQsHikari) Bukkit.getPluginManager().registerEvents(new QsHikariChatEvent(),this);
-        getLogger().info("服务器事件监听器注册完毕");
-        Bukkit.getServer().getPluginCommand("tleaflink").setExecutor(new Commands(this));
-        getLogger().info("命令注册完毕");
+        // 出站通道：发给 velocity 的事件数据
+        getServer().getMessenger().registerOutgoingPluginChannel(this, CHANNEL_INFO);
+        // 入站通道：接收 velocity 的握手消息
+        getServer().getMessenger().registerIncomingPluginChannel(this, CHANNEL_HELLO, this);
 
-        getScheduler().runTaskAsynchronously(() -> {
-            String mode = Config.getBotMode();
-            switch (mode) {
-                case "go-cqhttp":
-                    qqBot = new QQBot();
-                    qqBot.start();
-                    getLogger().info("已启动go-cqhttp服务");
-                    break;
-                case "kook":
-                    kookBot = new KookBot();
-                    kookBot.start();
-                    getLogger().info("已启动kook服务");
-                    break;
-                case "both":
-                    qqBot = new QQBot();
-                    qqBot.start();
-                    getLogger().info("已启动go-cqhttp服务");
-                    kookBot = new KookBot();
-                    kookBot.start();
-                    getLogger().info("已启动kook服务");
-                    break;
-                default:
-                    getLogger().warning("无法启动服务，请检查配置文件，插件已关闭");
-                    Bukkit.getPluginManager().disablePlugin(this);
-                    break;
-            }
-        });
+        // 注册事件监听器（死亡、成就上报）
+        getServer().getPluginManager().registerEvents(new InfoListener(this), this);
 
-        // All you have to do is adding the following two lines in your onEnable method.
-        // You can find the plugin ids of your plugins on the page https://bstats.org/what-is-my-plugin-id
-        int pluginId = 19427; // <-- Replace with the id of your plugin!
-        Metrics metrics = new Metrics(this, pluginId);
+        // 每 5 秒检查一次与 velocity 的连接状态
+        getServer().getScheduler().runTaskTimerAsynchronously(this, this::checkLink, 100L, 100L);
 
-        environment = new Environment();
-        getLogger().info( "TLeaf-Link已启动");
-
+        getLogger().info("TLeaf-Link（bukkit 信息收集端）已启动，等待 velocity 连接...");
     }
 
     @Override
     public void onDisable() {
+        getServer().getMessenger().unregisterOutgoingPluginChannel(this);
+        getServer().getMessenger().unregisterIncomingPluginChannel(this);
+        getLogger().info("TLeaf-Link 已关闭");
+    }
 
-        String mode = Config.getBotMode();
-        switch (mode) {
-            case "go-cqhttp":
-                if (qqBot != null) {
-                    qqBot.shutdown();
-                    getLogger().info("已关闭go-cqhttp服务");
-                }
-                break;
-            case "kook":
-                if (kookBot != null) {
-                    kookBot.shutdown();
-                    getLogger().info("已关闭kook服务");
-                }
-                break;
-            case "both":
-                if (qqBot != null) {
-                    qqBot.shutdown();
-                    getLogger().info("已关闭go-cqhttp服务");
-                }
-                if (kookBot != null) {
-                    kookBot.shutdown();
-                    getLogger().info("已关闭kook服务");
-                }
-                break;
-            default:
-                getLogger().warning("无法正常关闭服务，将在服务器关闭后强制关闭");
-                Bukkit.getPluginManager().disablePlugin(this);
-                break;
+    @Override
+    public void onPluginMessageReceived(String channel, Player player, byte[] message) {
+        if (!channel.equals(CHANNEL_HELLO)) {
+            return;
         }
-        DatabaseManager.close();
-        getLogger().info("TLeaf-Link已关闭");
+        linked = true;
+        lastHelloAt = System.currentTimeMillis();
+        getLogger().info("已连接到 TLeaf-Link velocity 端");
     }
 
-    public static void say(String s) {
-        CommandSender sender = Bukkit.getConsoleSender();
-        sender.sendMessage(s);
+    private void checkLink() {
+        // velocity 每 30 秒发一次握手，超过 90 秒没收到视为断开
+        if (linked && System.currentTimeMillis() - lastHelloAt > 90_000) {
+            linked = false;
+            getLogger().warning("与 TLeaf-Link velocity 端的连接已断开");
+        }
     }
 
-    public static TaskScheduler getScheduler() {
-        return scheduler;
+    public boolean isLinked() {
+        return linked;
     }
-
-    public static QQBot getQQBot() {
-        return qqBot;
-    }
-
-    public static KookBot getKookBot() {
-        return kookBot;
-    }
-
-    // 兼容旧调用，仅返回 QQBot（both 模式下 QQ 优先）
-    @Deprecated
-    public static Bot getBot() {
-        return qqBot;
-    }
-
-    public static Database getDatabase() {
-        return database;
-    }
-    public void setDatabase(Database database) {
-        TLeafLink.database = database;
-    }
-    public Environment getEnvironment() {return environment;}
 }
