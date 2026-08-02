@@ -32,7 +32,7 @@ import java.nio.file.Path;
 
 @Plugin(id = "tleaflink", name = "TLeaf-Link", version = "@version@",
         url = "https://github.com/LinyeFL/TLeaf-Link", description = "TLeaf-Link 跨服聊天机器人", authors = {"LinyeFL"})
-public class PlumBot {
+public class TLeafLink {
 
     private final ProxyServer server;
     private final Logger logger;
@@ -45,11 +45,11 @@ public class PlumBot {
     private static KookBot kookBot;
     private static Environment environment;
 
-    public static PlumBot INSTANCE;
+    public static TLeafLink INSTANCE;
     private static Database database;
 
     @Inject
-    public PlumBot(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory, Metrics.Factory metricsFactory) {
+    public TLeafLink(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory, Metrics.Factory metricsFactory) {
         this.server = server;
         this.logger = logger;
         this.dataDirectory = dataDirectory;
@@ -57,8 +57,6 @@ public class PlumBot {
 
         INSTANCE = this;
 
-        // Do some operation demanding access to the Velocity API here.
-        // For instance, we could register an event:
         try {
             vconf = new VelocityConfig(this);
             vconf.loadConfig();
@@ -111,8 +109,6 @@ public class PlumBot {
             }
         }).schedule();
 
-        // All you have to do is adding the following two lines in your onProxyInitialization method.
-        // You can find the plugin ids of your plugins on the page https://bstats.org/what-is-my-plugin-id
         int pluginId = 19428;
         Metrics metrics = metricsFactory.make(this, pluginId);
         metrics.addCustomChart(new Metrics.SimplePie("chart_id", () -> "value"));
@@ -170,7 +166,7 @@ public class PlumBot {
         return database;
     }
     public void setDatabase(Database database) {
-        PlumBot.database = database;
+        TLeafLink.database = database;
     }
     public Environment getEnvironment() {return environment;}
 }
