@@ -36,7 +36,7 @@ database:
       database: tleaflink
       user: tleaflink
       password: tleaflink
-      parameteters: "?useSSL=false"
+      parameters: "?useSSL=false"
     pool:
       connectionTimeout: 30000
       idleTimeout: 600000
