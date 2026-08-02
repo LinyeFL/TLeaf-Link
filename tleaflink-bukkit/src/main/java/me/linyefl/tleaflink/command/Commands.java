@@ -74,7 +74,7 @@ public class Commands implements CommandExecutor{
                 }
                 if (args.length > 2) return true;
                 if (args.length == 2) {
-                    if (KookBot.isKookEnabled()) {
+                    if (!KookBot.isKookEnabled()) {
                         sender.sendMessage("kook客户端未启动");
                         return true;
                     }
