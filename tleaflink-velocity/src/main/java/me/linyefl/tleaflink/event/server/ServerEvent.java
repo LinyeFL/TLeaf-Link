@@ -156,14 +156,14 @@ public class ServerEvent {
         );
     }
 
-    private String getServerDisplayName(String serverName) {
+    public static String getServerDisplayName(String serverName) {
         if (Config.messages.Servers == null) {
             return serverName;
         }
         return Config.messages.Servers.getOrDefault(serverName, serverName);
     }
 
-    private String format(String template, String... replacements) {
+    public static String format(String template, String... replacements) {
         String result = template == null ? "" : template;
         for (int i = 0; i + 1 < replacements.length; i += 2) {
             result = result.replace(replacements[i], replacements[i + 1]);
@@ -196,7 +196,7 @@ public class ServerEvent {
         }
     }
 
-    private void sendNotificationToAllPlatforms(String message) {
+    public static void sendNotificationToAllPlatforms(String message) {
         // QQ（受群通知开关控制）
         Bot qqBot = TLeafLink.getQQBot();
         if (qqBot != null) {
@@ -220,7 +220,7 @@ public class ServerEvent {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean isNotifyEnabled(long groupId) {
+    private static boolean isNotifyEnabled(long groupId) {
         try {
             Map<String, Object> msgObj = TLeafLink.INSTANCE.vconf.getMessagesObj();
             if (msgObj != null) {

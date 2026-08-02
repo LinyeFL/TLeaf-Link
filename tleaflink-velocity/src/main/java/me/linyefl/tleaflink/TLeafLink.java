@@ -17,6 +17,7 @@ import me.linyefl.tleaflink.bot.QQBot;
 import me.linyefl.tleaflink.command.Commands;
 import me.linyefl.tleaflink.command.QqReplyCommand;
 import me.linyefl.tleaflink.config.VelocityConfig;
+import me.linyefl.tleaflink.event.server.InfoChannelListener;
 import me.linyefl.tleaflink.event.server.ServerEvent;
 import me.linyefl.tleaflink.internal.Config;
 import me.linyefl.tleaflink.internal.Dependencies;
@@ -77,6 +78,14 @@ public class TLeafLink {
         DatabaseManager.start();
         server.getEventManager().register(this, new ServerEvent());
         logger.info("服务器事件监听器注册成功");
+        // 注册插件消息通道 + 事件监听器（子服死亡/成就上报）
+        server.getChannelRegistrar().register(
+                server.getChannelRegistrar().getOrCreate(InfoChannelListener.CHANNEL_INFO)
+        );
+        InfoChannelListener infoListener = new InfoChannelListener(this);
+        server.getEventManager().register(this, infoListener);
+        infoListener.startHelloTask();
+        logger.info("插件消息通道监听器注册成功");
         CommandManager manager = server.getCommandManager();
         CommandMeta linearbot = manager.metaBuilder("tleaflink").aliases("tll").build();
         manager.register(linearbot, new Commands(this));
