@@ -30,8 +30,8 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.nio.file.Path;
 
-@Plugin(id = "plumbot", name = "PlumBot", version = "1.3.2",
-        url = "https://github.com/RegadPoleCN/PlumBot", description = "A bot plugin for QQ or Kook.", authors = {"Linear,RegadPole"})
+@Plugin(id = "tleaflink", name = "TLeaf-Link", version = "1.0.0",
+        url = "https://github.com/LinyeFL/TLeaf-Link", description = "TLeaf-Link 跨服聊天机器人", authors = {"LinyeFL"})
 public class PlumBot {
 
     private final ProxyServer server;
@@ -69,9 +69,9 @@ public class PlumBot {
         }
 
         LibraryLoader.loadAll(Dependencies.class);
-        logger.info("PlumBot依赖已加载完成");
+        logger.info("TLeaf-Link 依赖已加载完成");
 
-        logger.info("It's a plugin for Minecraft!");
+        logger.info("TLeaf-Link 加载完成");
     }
 
     @Subscribe
@@ -80,7 +80,7 @@ public class PlumBot {
         server.getEventManager().register(this, new ServerEvent());
         logger.info("服务器事件监听器注册成功");
         CommandManager manager = server.getCommandManager();
-        CommandMeta linearbot = manager.metaBuilder("plumbot").aliases("pb", "PlumBot").build();
+        CommandMeta linearbot = manager.metaBuilder("tleaflink").aliases("tll").build();
         manager.register(linearbot, new Commands(this));
         logger.info("插件命令监听器注册成功");
         CommandMeta qqReply = manager.metaBuilder("qqreply").build();
@@ -118,7 +118,7 @@ public class PlumBot {
         metrics.addCustomChart(new Metrics.SimplePie("chart_id", () -> "value"));
 
         environment = new Environment();
-        logger.info("PlumBot 已启动");
+        logger.info("TLeaf-Link 已启动");
 
     }
 
@@ -136,7 +136,7 @@ public class PlumBot {
             getLogger().warn("无法正常关闭服务，将在服务器关闭后强制关闭");
         }
         DatabaseManager.close();
-        getLogger().info("PlumBot已关闭");
+        getLogger().info("TLeaf-Link 已关闭");
     }
 
     public Logger getLogger() {
