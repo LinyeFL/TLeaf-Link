@@ -1,11 +1,7 @@
 package me.linyefl.tleaflink;
 
-import com.google.gson.JsonParser;
-import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import net.kyori.adventure.translation.GlobalTranslator;
-import net.kyori.adventure.translation.TranslationRegistry;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,18 +12,14 @@ import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class InfoListener implements Listener {
 
     private final TLeafLink plugin;
 
-    /** 进度命名空间ID -> 官方中文译名（Minecraft Wiki 官方译名 = 游戏 zh_cn 语言文件） */
+    /** 进度命名空间ID -> 官方中文译名 */
     private static final Map<String, String> ADVANCEMENT_NAMES = new HashMap<>();
 
     static {
@@ -170,55 +162,6 @@ public class InfoListener implements Listener {
 
     public InfoListener(TLeafLink plugin) {
         this.plugin = plugin;
-        registerZhCn();
-    }
-
-    /** 把 Minecraft 的 %s / %1$s 占位符转换成 MessageFormat 的 {0} / {1} 格式 */
-    private static String mcToMessageFormat(String value) {
-        StringBuilder sb = new StringBuilder();
-        int auto = 0;
-        for (int i = 0; i < value.length(); i++) {
-            char c = value.charAt(i);
-            if (c == '%' && i + 1 < value.length()) {
-                char n = value.charAt(i + 1);
-                if (n == 's' || n == 'd') {
-                    sb.append('{').append(auto++).append('}');
-                    i++;
-                    continue;
-                }
-                int j = i + 1;
-                while (j < value.length() && Character.isDigit(value.charAt(j))) j++;
-                if (j > i + 1 && j < value.length() && value.charAt(j) == '$'
-                    && j + 1 < value.length() && (value.charAt(j + 1) == 's' || value.charAt(j + 1) == 'd')) {
-                    int idx = Integer.parseInt(value.substring(i + 1, j)) - 1;
-                    sb.append('{').append(idx).append('}');
-                    i = j + 1;
-                    continue;
-                }
-            }
-            sb.append(c);
-        }
-        return sb.toString();
-    }
-
-    /** 加载官方 zh_cn 语言文件，让死亡消息能渲染成游戏内中文 */
-    private void registerZhCn() {
-        try (InputStream in = plugin.getResource("zh_cn.json")) {
-            if (in == null) {
-                plugin.getLogger().warning("zh_cn.json 未找到，死亡消息将显示原始翻译键");
-                return;
-            }
-            Map<String, String> map = new HashMap<>();
-            JsonParser.parseReader(new InputStreamReader(in, StandardCharsets.UTF_8))
-                    .getAsJsonObject().entrySet()
-                    .forEach(e -> map.put(e.getKey(), mcToMessageFormat(e.getValue().getAsString())));
-            TranslationRegistry registry = TranslationRegistry.create(Key.key("tleaflink", "zh_cn"));
-            registry.registerAll(Locale.SIMPLIFIED_CHINESE, map.keySet(), key -> new java.text.MessageFormat(map.get(key)));
-            GlobalTranslator.translator().addSource(registry);
-            plugin.getLogger().info("zh_cn 语言文件已加载（" + map.size() + " 条）");
-        } catch (Exception e) {
-            plugin.getLogger().warning("加载 zh_cn.json 失败: " + e.getMessage());
-        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -231,8 +174,8 @@ public class InfoListener implements Listener {
         if (raw == null) {
             return;
         }
-        String full = PlainTextComponentSerializer.plainText()
-                .serialize(GlobalTranslator.render(raw, Locale.SIMPLIFIED_CHINESE));
+        // Paper 26.2 返回的 deathMessage 已根据客户端语言翻译好，直接转纯文本
+        String full = PlainTextComponentSerializer.plainText().serialize(raw);
         String desc = full.startsWith(player.getName())
                 ? full.substring(player.getName().length()).trim()
                 : full;
