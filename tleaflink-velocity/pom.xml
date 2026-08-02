@@ -9,7 +9,7 @@
     <parent>
         <groupId>me.linyefl</groupId>
         <artifactId>tleaflink-parent</artifactId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>tleaflink-velocity</artifactId>
