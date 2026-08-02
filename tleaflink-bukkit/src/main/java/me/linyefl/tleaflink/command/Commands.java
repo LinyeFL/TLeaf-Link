@@ -27,14 +27,14 @@ public class Commands implements CommandExecutor{
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         if (args.length == 0) {
-            sender.sendMessage("请使用/pb help查看命令使用方法");
+            sender.sendMessage("请使用/tleaflink help查看命令使用方法");
             return true;
         }
 
         switch (args[0]) {
             case "info":
                 StringBuilder stringbuilder = new StringBuilder();
-                stringbuilder.append("§1---PlumBot 信息---").append("\n");
+                stringbuilder.append("§1---TLeaf-Link 信息---").append("\n");
                 stringbuilder.append("§a作者: ").append("§f").append(plugin.getEnvironment().author).append("\n");
                 stringbuilder.append("§a版本: ").append("§f").append(plugin.getEnvironment().version).append("\n");
                 stringbuilder.append("§a机器人平台: ").append("§f").append(Config.getBotMode()).append("\n");
@@ -55,20 +55,20 @@ public class Commands implements CommandExecutor{
                 Config.loadConfig();
                 DatabaseManager.start();
                 PlumBot.getBot().start();
-                sender.sendMessage("PlumBot已重载");
+                sender.sendMessage("TLeaf-Link已重载");
                 break;
             case "help":
                 if (args.length != 1) return true;
-                sender.sendMessage("§6PlumBot 机器人帮助菜单");
-                sender.sendMessage("§6/pb reload :§f重载插件");
-                sender.sendMessage("§6/pb help :§f获取插件帮助");
-                sender.sendMessage("§6/pb info :§f插件基本信息");
-                sender.sendMessage("§6/pb kook help :§f获取kook帮助");
-                sender.sendMessage("§6/pb kook plugins :§f获取kook插件列表");
+                sender.sendMessage("§6TLeaf-Link 机器人帮助菜单");
+                sender.sendMessage("§6/tleaflink reload :§f重载插件");
+                sender.sendMessage("§6/tleaflink help :§f获取插件帮助");
+                sender.sendMessage("§6/tleaflink info :§f插件基本信息");
+                sender.sendMessage("§6/tleaflink kook help :§f获取kook帮助");
+                sender.sendMessage("§6/tleaflink kook plugins :§f获取kook插件列表");
                 break;
             case "kook":
                 if (args.length == 1) {
-                    sender.sendMessage("命令错误，格式：/plumbot kook <value>");
+                    sender.sendMessage("命令错误，格式：/tleaflink kook <value>");
                     sender.sendMessage("value可选值：plugins，help");
                     return true;
                 }
@@ -91,7 +91,7 @@ public class Commands implements CommandExecutor{
                 break;
             default:
                 if (args.length != 1) return true;
-                sender.sendMessage("错误的指令用法，请使用/pb help查看命令使用方法");
+                sender.sendMessage("错误的指令用法，请使用/tleaflink help查看命令使用方法");
                 break;
         }
         return true;
