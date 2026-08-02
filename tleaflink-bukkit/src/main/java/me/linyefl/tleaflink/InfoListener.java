@@ -1,5 +1,5 @@
 package me.linyefl.tleaflink;
-
+ 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
@@ -8,20 +8,20 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
-
+ 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
+ 
 public class InfoListener implements Listener {
-
+ 
     private final TLeafLink plugin;
-
+ 
     /** 进度命名空间ID -> 官方中文译名 */
     private static final Map<String, String> ADVANCEMENT_NAMES = new HashMap<>();
-
+ 
     static {
         // ===== Minecraft（16）=====
         ADVANCEMENT_NAMES.put("story/root", "Minecraft");
@@ -40,7 +40,7 @@ public class InfoListener implements Listener {
         ADVANCEMENT_NAMES.put("story/cure_zombie_villager", "僵尸科医生");
         ADVANCEMENT_NAMES.put("story/follow_ender_eye", "隔墙有眼");
         ADVANCEMENT_NAMES.put("story/enter_the_end", "结束了？");
-
+ 
         // ===== 下界（23）=====
         ADVANCEMENT_NAMES.put("nether/root", "下界");
         ADVANCEMENT_NAMES.put("nether/distract_piglin", "金光闪闪");
@@ -65,7 +65,7 @@ public class InfoListener implements Listener {
         ADVANCEMENT_NAMES.put("nether/all_potions", "狂乱的鸡尾酒");
         ADVANCEMENT_NAMES.put("nether/create_full_beacon", "信标工程师");
         ADVANCEMENT_NAMES.put("nether/all_effects", "为什么会变成这样呢？");
-
+ 
         // ===== 末地（9）=====
         ADVANCEMENT_NAMES.put("end/root", "末地");
         ADVANCEMENT_NAMES.put("end/kill_dragon", "解放末地");
@@ -76,7 +76,7 @@ public class InfoListener implements Listener {
         ADVANCEMENT_NAMES.put("end/find_end_city", "在游戏尽头的城市");
         ADVANCEMENT_NAMES.put("end/elytra", "天空即为极限");
         ADVANCEMENT_NAMES.put("end/levitate", "这上面的风景不错");
-
+ 
         // ===== 冒险（47）=====
         ADVANCEMENT_NAMES.put("adventure/root", "冒险");
         ADVANCEMENT_NAMES.put("adventure/avoid_vibration", "潜行100级");
@@ -125,7 +125,7 @@ public class InfoListener implements Listener {
         ADVANCEMENT_NAMES.put("adventure/very_very_frightening", "魔女审判");
         ADVANCEMENT_NAMES.put("adventure/spyglass_at_dragon", "那是飞机吗？");
         ADVANCEMENT_NAMES.put("adventure/revaulting", "宝经磨炼");
-
+ 
         // ===== 农牧业（31）=====
         ADVANCEMENT_NAMES.put("husbandry/root", "农牧业");
         ADVANCEMENT_NAMES.put("husbandry/allay_deliver_item_to_player", "找到一个好朋友");
@@ -159,11 +159,11 @@ public class InfoListener implements Listener {
         ADVANCEMENT_NAMES.put("husbandry/froglights", "相映生辉！");
         ADVANCEMENT_NAMES.put("husbandry/kill_axolotl_target", "友谊的治愈力！");
     }
-
+ 
     public InfoListener(TLeafLink plugin) {
         this.plugin = plugin;
     }
-
+ 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerDeath(PlayerDeathEvent event) {
         if (!plugin.isLinked()) {
@@ -179,9 +179,9 @@ public class InfoListener implements Listener {
         String desc = full.startsWith(player.getName())
                 ? full.substring(player.getName().length()).trim()
                 : full;
-        send("death", player.getName() + "\u0000" + DeathTranslator.translate(desc));
+        send(player, "death", player.getName() + "\u0000" + DeathTranslator.translate(desc));
     }
-
+ 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onAdvancement(PlayerAdvancementDoneEvent event) {
         if (!plugin.isLinked()) {
@@ -193,10 +193,10 @@ public class InfoListener implements Listener {
             return;
         }
         String name = ADVANCEMENT_NAMES.getOrDefault(key, key);
-        send("advancement", player.getName() + "\u0000" + name);
+        send(player, "advancement", player.getName() + "\u0000" + name);
     }
-
-    private void send(String type, String content) {
+ 
+    private void send(Player player, String type, String content) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(bos);
         try {
@@ -205,6 +205,7 @@ public class InfoListener implements Listener {
         } catch (IOException e) {
             return;
         }
-        plugin.getServer().sendPluginMessage(plugin, TLeafLink.CHANNEL_INFO, bos.toByteArray());
+        // 修复：只通过事件玩家的连接发送一次，避免给每个在线玩家各发一份导致复读
+        player.sendPluginMessage(plugin, TLeafLink.CHANNEL_INFO, bos.toByteArray());
     }
 }
