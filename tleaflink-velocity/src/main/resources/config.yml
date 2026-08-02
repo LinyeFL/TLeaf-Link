@@ -33,10 +33,10 @@ database:
     mysql:
       host: localhost
       port: 3306
-      database: plumbot
-      user: plumbot
-      password: plumbot
-      parameters: "?useSSL=false"
+      database: tleaflink
+      user: tleaflink
+      password: tleaflink
+      parameteters: "?useSSL=false"
     pool:
       connectionTimeout: 30000
       idleTimeout: 600000
