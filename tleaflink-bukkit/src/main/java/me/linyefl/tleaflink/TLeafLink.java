@@ -46,9 +46,12 @@ public final class TLeafLink extends JavaPlugin implements PluginMessageListener
         if (!channel.equals(CHANNEL_HELLO)) {
             return;
         }
+        boolean firstConnect = !linked;
         linked = true;
         lastHelloAt = System.currentTimeMillis();
-        getLogger().info("已连接到 TLeaf-Link velocity 端");
+        if (firstConnect) {
+            getLogger().info("已连接到 TLeaf-Link velocity 端");
+        }
     }
 
     private void checkLink() {
