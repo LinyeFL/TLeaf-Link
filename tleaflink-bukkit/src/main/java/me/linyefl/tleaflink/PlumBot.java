@@ -46,7 +46,7 @@ public final class PlumBot extends JavaPlugin implements Listener {
         Config.createConfig();
 
         LibraryLoader.loadAll(Dependencies.class);
-        getLogger().info("PlumBot依赖已加载成功");
+        getLogger().info("TLeaf-Link依赖已加载成功");
     }
 
     @Override
@@ -64,7 +64,7 @@ public final class PlumBot extends JavaPlugin implements Listener {
         if (QuickShopHook.hasQs) Bukkit.getPluginManager().registerEvents(new QsChatEvent(),this);
         if (QuickShopHook.hasQsHikari) Bukkit.getPluginManager().registerEvents(new QsHikariChatEvent(),this);
         getLogger().info("服务器事件监听器注册完毕");
-        Bukkit.getServer().getPluginCommand("plumbot").setExecutor(new Commands(this));
+        Bukkit.getServer().getPluginCommand("tleaflink").setExecutor(new Commands(this));
         getLogger().info("命令注册完毕");
 
         getScheduler().runTaskAsynchronously(() -> {
@@ -101,7 +101,7 @@ public final class PlumBot extends JavaPlugin implements Listener {
         Metrics metrics = new Metrics(this, pluginId);
 
         environment = new Environment();
-        getLogger().info( "PlumBot已启动");
+        getLogger().info( "TLeaf-Link已启动");
 
     }
 
@@ -138,7 +138,7 @@ public final class PlumBot extends JavaPlugin implements Listener {
                 break;
         }
         DatabaseManager.close();
-        getLogger().info("PlumBot已关闭");
+        getLogger().info("TLeaf-Link已关闭");
     }
 
     public static void say(String s) {
