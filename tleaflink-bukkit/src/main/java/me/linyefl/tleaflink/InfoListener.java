@@ -220,6 +220,9 @@ public class InfoListener implements Listener {
         }
         Player player = event.getPlayer();
         String key = event.getAdvancement().getKey().getKey(); // 形如 story/root
+        if (key.startsWith("recipes/")) {
+            return; // 配方解锁不转发，太吵且玩家无感知
+        }
         String name = ADVANCEMENT_NAMES.getOrDefault(key, key); // 未收录时回退显示原始 key
         send("advancement", player.getName() + "\u0000" + name);
     }
